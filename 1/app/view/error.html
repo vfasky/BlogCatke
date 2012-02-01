@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+
+{% block title %}发生错误{% end %}
+
+{% block body %}
+
+<div class="container" style="margin-top: 5%">
+    <h2>错误信息:</h2>
+    <div class="alert-message block-message error">
+        <strong>{{msg}}</strong>
+
+        <div class="alert-actions">
+            <a href="{{url}}" class="btn small"> 返回 </a>
+        </div>
+
+    </div>
+    &copy; QcoreBlog Powered by <a href="http://www.tornadoweb.org/" target="_blank">tornado</a>  Time : {{ handler.request_time() }} sec
+</div>
+
+{% end %}

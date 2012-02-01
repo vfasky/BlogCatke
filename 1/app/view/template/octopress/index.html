@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+
+
+
+{% block content %}
+<div class="blog-index">
+{% for post in list %}
+<article>
+    <header>
+        <h1 class="entry-title"><a href="/{{ post.type }}/{{ url_escape( post.slug ) }}">{{ post.title }}</a></h1>
+        <p class="meta">
+      	<time datetime="{{ Q.date('%Y-%m-%d %H:%M' , post.created ) }}" pubdate>{{ Q.date('%Y-%m-%d %H:%M' , post.created ) }}</time>
+        </p>
+    </header>
+    <div class="entry-content">{{ Q.markdown( post.text ) }}</div>
+    <footer>
+      <a rel="full-article" href="/{{ post.type }}/{{ url_escape( post.slug ) }}">Read On</a>
+    </footer>
+</article>
+{% end %}
+
+    <nav role="pagination">
+        <div>
+            {% if pagination['current'] != pagination['next'] and pagination['count'] > 1 %}
+            <a class="prev" href="?page={{pagination['next']}}{{urlargs}}">&larr; Older</a>
+            {% end %}
+
+            &nbsp;
+
+            {% if pagination['current'] != pagination['prev'] and pagination['count'] > 1 %}
+            <a class="next" href="?page={{pagination['prev']}}{{urlargs}}">Newer &rarr;</a>
+            {% end %}
+
+        </div>
+    </nav>
+</div>
+{% end %}
+

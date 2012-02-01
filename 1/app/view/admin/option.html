@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+
+{% block title %}基本设置{% end %}
+
+{% block head-more %}
+<script type="text/javascript">
+    jQuery(function(){
+        // 基本资料
+        var form = new Qform( { url : '' } ,{{ form.toJson() }} , [ {'label' : '保存'} ] );
+        form.setValues( {{ json_encode(data) }} );
+
+        form.dom().appendTo( '#form-wrap' );
+
+    })
+</script>
+{% end %}
+{% block wrap %}
+<div class="config-forms">
+    <div id="form-wrap" class="item-form" ></div>
+
+</div>
+{% end %}

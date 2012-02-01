@@ -1,0 +1,81 @@
+{% extends "base.html" %}
+{% block title %}角色管理{% end %}
+
+{% block head-more %}
+
+<script type="text/javascript">
+jQuery(function(){
+    // 添加
+    var form = new Qform( { url : '' } ,{{ form.toJson() }} , [ {'label' : '添加'} ] );
+    var modelDom = QformDialog( form );
+
+    jQuery('#role-add').click(function(){
+        modelDom.modal('show');
+        return false;
+    });
+    // 编辑
+    (function(){
+        var roles = {{ json_encode( roles ) }};
+        var form = new Qform( { url : '' } ,{{ form.toJson() }} , [ {'label' : '保存'} ] );
+        //弹窗容器
+        var modelDom = QformDialog( form );
+
+        jQuery('#role-list').find('tbody span.notice').each(function( k ){
+            var role = roles[ k ];
+            var self = jQuery(this);
+            if( role )
+            {
+                //编辑
+                self.click(function(){
+                    form.setValues( role );
+                    modelDom.modal('show');
+                    return false;
+                }).next().click(function(){ //删除
+                            Qconfirm('确认删除?' , function(ret){
+                                if(ret)
+                                {
+                                    jQuery.post('/admin/role' , { deleteId : role.id } , function( json ){
+                                        if( json.success )
+                                        {
+                                            window.location.href = '/admin/role'
+                                        }
+                                    } , 'json')
+                                }
+                            })
+                        })
+            }
+
+        });
+    })();
+});
+</script>
+{% end %}
+
+{% block wrap %}
+<div style="margin: 6px;text-align: right;">
+    <a href="#add" class="btn primary" id="role-add" >添加</a>
+</div>
+<table class="bordered-table zebra-striped" id="role-list">
+    <thead>
+    <tr>
+        <th>#</th>
+        <th>名称</th>
+        <th>代码</th>
+        <th>操作</th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for role in roles %}
+    <tr>
+        <td>{{role.id}}</td>
+        <td>{{role.name}}</td>
+        <td>{{role.code}}</td>
+        <td>
+            <span class="label notice" style="cursor: pointer" title="编辑">Edit</span>
+            <span class="label important" style="cursor: pointer" title="删除">Delete</span>
+        </td>
+    </tr>
+    {% end %}
+    </tbody>
+</table>
+{% end %}

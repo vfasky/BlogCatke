@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+
+{% block title %} {{ page.title }} - {{ options['site']['title'] }}{% end %}
+
+{% block content %}
+<div>
+    <article class="hentry" role="article">
+        <header>
+            <h1 class="entry-title">{{ page.title }}</h1>
+            <p class="meta">
+                <time datetime="{{ Q.date('%Y-%m-%d %H:%M' , page.created ) }}" pubdate>{{ Q.date('%Y-%m-%d %H:%M' , page.created ) }}</time>
+            </p>
+
+        </header>
+        <div class="entry-content">{{ page.text }}</div>
+
+    </article>
+
+</div>
+{% end %}

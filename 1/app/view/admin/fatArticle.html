@@ -1,0 +1,148 @@
+{% extends "base.html" %}
+{% block title %}
+  {% if data.has_key('id') %}
+  编辑 {{ data.title }}
+  {% else %}
+  添加
+  {% end %}
+{% end %}
+
+{% block head-more %}
+<link rel="stylesheet" type="text/css" href="{{ static_url('js/markitup/skins/simple/style.css') }}" />
+<link rel="stylesheet" type="text/css" href="{{ static_url('js/markitup/sets/markdown/style.css') }}" />
+
+<script type="text/javascript" src="{{ static_url('js/bootstrap-tabs.js') }}"></script>
+
+<script type="text/javascript" src="{{ static_url('js/qcore.js') }}"></script>
+<script type="text/javascript" src="{{ static_url('js/markitup/jquery.markitup.js') }}"></script>
+<script type="text/javascript" src="{{ static_url('js/markdown.js') }}"></script>
+
+<link rel="stylesheet" type="text/css" href="{{ static_url('js/tokeninput/token-input-mac.css') }}" />
+
+<script type="text/javascript" src="{{ static_url('js/jquery.tokeninput.js') }}"></script>
+<script type="text/javascript">
+    jQuery(function(){
+        // 表单
+        var form = new Qform( { url : '' } ,{{ form.toJson() }} , [ {'label' : '发表'} ] );
+        form.setValues( {{ json_encode(data) }} )
+
+        //分配侧栏
+        form.dom().wrapInner('<div class="span11"></div>');
+        var sidebar = jQuery('<div class="span5" id="article-sidebar"></div>');
+        form.dom().find('[name=category_id] , [name=slug] , [name=tags]').parent().parent().appendTo( sidebar );
+        form.dom().find('[name=title]').blur(function(){
+            if('' == form.dom().find('[name=slug]').val())
+            {
+                form.dom().find('[name=slug]').val( jQuery(this).val() + '.html' )
+            }
+        });
+        sidebar.appendTo( form.dom() );
+
+        //加入dom树
+        form.dom().appendTo('#article-wrap');
+
+        // tag
+        var tagsInput = form.dom().find('input[name=tags]')
+        var tags = {{ json_encode(tags) }};
+        var tagsItem = tagsInput.tokenInput( tags , {
+            theme : 'mac' ,
+            searchDelay : 100 ,
+            preventDuplicates : true ,
+            tokenValue : 'name' ,
+            onAdd : function(){
+                var data = tagsItem.tokenInput('get');
+                var json = [];
+                jQuery.each(data , function(k , v){
+                    json[ json.length ] = '"' + v['name'] + '"'
+                });
+                tagsItem.val( '[' + json.join(',') + ']' )
+
+
+            },
+            onDelete : function(){
+                var data = tagsItem.tokenInput('get');
+                var json = [];
+                jQuery.each(data , function(k , v){
+                    json[ json.length ] = '"' + v['name'] + '"'
+                });
+                tagsItem.val( '[' + json.join(',') + ']' )
+            }
+        });
+        var thisTags = {{ json_encode(thisTags) }};
+        jQuery.each( thisTags , function(k,v){
+            tagsItem.tokenInput('add' , { name : v.name })
+        } );
+        tagsItem.parent().append('<span class="help-block">请以半角空格隔开</span>');
+
+        // 加入编辑器 & 预览
+        var previewBox = jQuery('<div class="article-preview"></div>');
+        var converter = new Showdown.converter();
+
+        //扩展编辑器
+        var editor = form.dom().find('textarea');
+        var QcoreEditWidth = new Qcore.editor( editor );
+
+        // mIu nameSpace to avoid conflict.
+        var miu = {
+            markdownTitle: function(markItUp, char) {
+                heading = '';
+                n = $.trim(markItUp.selection||markItUp.placeHolder).length;
+                for(i = 0; i < n; i++) {
+                    heading += char;
+                }
+                return '\n'+heading;
+            }
+        }
+
+        var QcoreMarkDownSettings = {
+            previewParserPath:	'',
+            onShiftEnter:		{keepDefault:false, openWith:'\n\n'},
+            markupSet: [
+                {name:'First Level Heading', key:'1', placeHolder:'Your title here...', closeWith:function(markItUp) { return miu.markdownTitle(markItUp, '=') } },
+                {name:'Second Level Heading', key:'2', placeHolder:'Your title here...', closeWith:function(markItUp) { return miu.markdownTitle(markItUp, '-') } },
+                {name:'Heading 3', key:'3', openWith:'### ', placeHolder:'Your title here...' },
+                {name:'Heading 4', key:'4', openWith:'#### ', placeHolder:'Your title here...' },
+                {name:'Heading 5', key:'5', openWith:'##### ', placeHolder:'Your title here...' },
+                {name:'Heading 6', key:'6', openWith:'###### ', placeHolder:'Your title here...' },
+                {separator:'---------------' },
+                {name:'粗体', key:'B', openWith:'**', closeWith:'**'},
+                {name:'斜体', key:'I', openWith:'_', closeWith:'_'},
+                {separator:'---------------' },
+                {name:'无序列表', openWith:'- ' },
+                {name:'有序列表', openWith:function(markItUp) {
+                    return markItUp.line+'. ';
+                }},
+                {separator:'---------------' },
+                {name:'图片', key:'P', beforeInsert: QcoreEditWidth.widget['photo'] },
+                {name:'连接/附件', key:'L', beforeInsert: QcoreEditWidth.widget['link'] },
+                {separator:'---------------'},
+                {name:'引用', openWith:'> '},
+                {name:'代码', key:'D' , openWith:'(!(\t|!|`)!)', closeWith:'(!(`)!)'}
+            ]
+        }
+
+        editor.markItUp(QcoreMarkDownSettings).keyup(function(){
+                                                        var data = jQuery(this).val();
+                                                        var html = converter.makeHtml( data );
+                                                        previewBox.html(html)
+                                                    });
+
+        {% if data.has_key('id') %}
+            var data = form.dom().find('textarea').val();
+            var html = converter.makeHtml( data );
+            previewBox.html(html)
+        {% end %}
+
+
+
+        previewBox.appendTo( form.dom().find('.markItUpFooter') );
+
+    });
+</script>
+{% end %}
+
+{% block wrap %}
+<div id="article-wrap"></div>
+
+
+{% end %}

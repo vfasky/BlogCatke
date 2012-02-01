@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+
+{% block title %}评论设置(disqus){% end %}
+
+{% block head-more %}
+<script type="text/javascript">
+    jQuery(function(){
+        // 基本资料
+        var form = new Qform( { url : '' } ,{{ form.toJson() }} , [ {'label' : '保存'} ] );
+        form.setValues( {{ json_encode(data) }} );
+        form.dom().find('input[name=disqus_shortname]').parent().append('<span class="">.disqus.com </span>');
+        form.dom().appendTo( '#form-wrap' );
+
+    })
+</script>
+{% end %}
+{% block wrap %}
+<div class="config-forms">
+    <div class="alert-message block-message warning" style="margin: 5px 40px;">
+        <p><strong>Disqus</strong> 第三方社会化评论系统，主要为网站主提供评论托管服务。Disqus可以很好的提高网站的用户活跃度，增强网站的社区属性，从而给网站带来用户的回访和流量。</p>
+        <div class="alert-actions">
+            <a href="http://disqus.com/admin/register/" target="_blank" class="btn small">注册 Disqus</a>
+
+        </div>
+    </div>
+    <div id="form-wrap" class="item-form" ></div>
+
+</div>
+{% end %}

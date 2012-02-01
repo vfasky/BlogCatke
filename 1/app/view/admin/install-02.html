@@ -1,0 +1,32 @@
+{% extends "../base.html" %}
+
+{% block title %}安装 Qcore Blog{% end %}
+
+{% block body %}
+<script type="text/javascript">
+    jQuery(function(){
+        // 基本资料
+        var form = new Qform( { url : '?step=2' } ,{{ form.toJson() }} , [ {'label' : '完成'} ] );
+        form.dom().appendTo( '#form-wrap' );
+
+    })
+</script>
+<div style="margin: 10% auto; width:600px;">
+    <div class="well">
+        <div class="page-header">
+            <h1>安装 Qcore Blog <small> 只需 2 步</small></h1>
+        </div>
+        <ul class="breadcrumb">
+
+            <li>检查环境 <span class="divider">/</span> </li>
+            <li class="active">设置管理员 <span class="divider">/</span> </li>
+        </ul>
+
+        <div id="form-wrap">
+
+        </div>
+
+
+    </div>
+</div>
+{% end %}

@@ -1,0 +1,11 @@
+{% if pagination['countPage'] > 1 %}
+<div class="pagination">
+    <ul>
+        <li class="prev {% if pagination['current'] == 1%}disabled{% end %}"><a href="{{link}}{{pagination['prev']}}">&larr; Previous</a></li>
+        {% for v in list %}
+        <li class="{{ v['class'] }}{% if v['name'] == str(pagination['current']) %} active{% end %}"><a href="{{ v['url'] }}">{{ v['name'] }}</a></li>
+        {% end %}
+        <li class="next {% if pagination['current'] == pagination['countPage']%}disabled{% end %}"><a href="{{link}}{{pagination['next']}}">Next &rarr;</a></li>
+    </ul>
+</div>
+{% end %}

@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% block title %}后台登陆{% end %}
+
+{% block head %}
+<script type="text/javascript">
+    jQuery(function(){
+        var form = new Qform( {  } ,{{ form.toJson() }} , [ {'label' : '登陆'} ] );
+        form.dom().appendTo( jQuery('.well') );
+    });
+</script>
+{% end %}
+{% block body %}
+
+<div  style="margin: 10% auto; width:400px;">
+    <div class="well">
+
+    </div>
+</div>
+{% end %}

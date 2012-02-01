@@ -1,0 +1,105 @@
+{% extends "../base.html" %}
+
+{% block head %}
+<link href="{{ static_url('css/admin.css') }}" rel="stylesheet"/>
+<script type="text/javascript" src="{{ static_url('js/bootstrap-dropdown.js') }}"></script>
+<script type="text/javascript" src="{{ static_url('js/bootstrap-modal.js') }}"></script>
+<script type="text/javascript" src="{{ static_url('js/qcommon.js') }}"></script>
+{% block head-more %}{% end %}
+{% end %}
+{% block body %}
+<div class="header">
+    <div class="container">
+        {% if handler.acl_current_user().has_key('nickname') %}
+        <ul class="tabs" style="float: right; border: none;">
+            <li class="dropdown" data-dropdown="dropdown" >
+                <a href="#" class="dropdown-toggle">{{ handler.acl_current_user()['nickname'] }}</a>
+                <ul class="dropdown-menu">
+                    <li><a href="/admin/profile">个人资料</a></li>
+                    <li><a href="/" target="_blank">查看网站</a></li>
+                    <li class="divider"></li>
+                    <li><a href="/logout">退出</a></li>
+                </ul>
+            </li>
+        </ul>
+        {% end %}
+        <h1>Qcore <small>Blog</small></h1>
+
+        <ul class="tabs" id="top-menu">
+
+            <li class="dropdown" data-dropdown="dropdown">
+                <a href="#" class="dropdown-toggle" title="博客">Blog</a>
+                <ul class="dropdown-menu">
+                    <li><a href="/admin/fatArticle">撰写文章</a></li>
+                    <li><a href="/admin/articles">文章列表</a></li>
+
+                    <li class="divider"></li>
+
+                    <li><a href="/admin/fatPage">撰写页面</a></li>
+                    <li><a href="/admin/pages">页面列表</a></li>
+                </ul>
+            </li>
+
+            <li class="dropdown" data-dropdown="dropdown">
+                <a href="#" class="dropdown-toggle" title="设置">Options</a>
+                <ul class="dropdown-menu">
+                    <li><a href="/admin/option">基本设置</a></li>
+                    <li><a href="/admin/comment">评论设置(disqus)</a></li>
+                    <li class="divider"></li>
+                    <li><a href="/admin/template">风格</a></li>
+                    <li class="divider"></li>
+                    <li><a href="/admin/category">文章分类</a></li>
+                    <li><a href="/admin/tags">tag 管理</a></li>
+                </ul>
+            </li>
+
+            <li class="dropdown" data-dropdown="dropdown">
+                <a href="#" class="dropdown-toggle" title="会员">User</a>
+                <ul class="dropdown-menu">
+                    <li><a href="/admin/user">会员管理</a></li>
+                    <li><a href="/admin/profile">个人资料</a></li>
+                </ul>
+            </li>
+
+            <li class="dropdown" data-dropdown="dropdown">
+                <a href="#" class="dropdown-toggle" title="系统">System</a>
+                <ul class="dropdown-menu">
+                    <li><a href="/admin/role">角色管理</a></li>
+                    <li><a href="/admin/acl">访问控制</a></li>
+                </ul>
+            </li>
+        </ul>
+    </div>
+</div>
+
+    <div class="container" style="min-height: 585px; ">
+        <div class="row" >
+            {% block wrap %}{% end %}
+        </div>
+    </div>
+
+<div class="footer" >
+    <div class="container">
+         Powered by <a href="http://www.tornadoweb.org/" target="_blank">tornado</a>
+        & <a href="http://Qcore.sinaapp.com/" target="_blank">Qcore Blog</a>
+        Time : {{ handler.request_time() }} sec
+        
+    </div>
+</div>
+<script type="text/javascript">
+    (function(jQuery){
+        var href = window.location.href;
+        var path = href.replace( document.location.protocol + '//' +  window.location.host , '' );
+        path = path.split('?')[0]
+        //边栏高亮导航
+        jQuery('#top-menu').find('ul li a').each(function(){
+            var self = jQuery(this);
+            if( self.attr('href') == path )
+            {
+                self.parent().parent().parents().css('font-weight','bold');
+                return false;
+            }
+        });
+    })(jQuery);
+</script>
+{% end %}

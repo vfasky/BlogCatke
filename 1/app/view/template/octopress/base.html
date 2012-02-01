@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>{% block title %}{{ options['site']['title'] }}{% end %}</title>
+  <meta name="author" content="" />
+  <meta name="description" content="{% block description %}{{ options['site']['desc'] }}{% end %}" />
+  <meta name="HandheldFriendly" content="True" />
+  <meta name="MobileOptimized" content="320" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="keywords" content="{% block keywords %}{{ options['site']['keywords'] }}{% end %}" />
+  <link rel="canonical" href="" />
+  <link href="/feed/" rel="alternate" title="" type="application/atom+xml" />
+  <link href="/favicon.ico" rel="shortcut icon" />
+
+  <link href="{{ static_url('template/octopress/css/screen.css') }}" media="screen, projection" rel="stylesheet" type="text/css" />
+
+  <script src="http://lib.sinaapp.com/js/jquery/1.7/jquery.min.js"></script>
+  <script src="{{ static_url('template/octopress/js/main.js') }}"></script>
+
+
+</head>
+<body>
+  <header role="banner">
+	<hgroup>
+	  <h1><a href="/">{{ options['site']['title'] }}</a></h1>
+		<h2>{{ options['site']['subtitle'] }}</h2>
+	</hgroup>
+  </header>
+  <nav role=navigation>
+	<ul role=subscription data-subscription="rss">
+	  <li><a href="/feed/" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+	</ul>
+	<form action="/" method="get">
+	  <fieldset role="site-search">
+		<input class="search" type="search" name="q" placeholder="Search" />
+	  </fieldset>
+	</form>
+	<ul role=main-navigation>
+	  <li><a href="/">Blog</a></li>
+      {% for v in Q.pageList() %}
+	  <li><a href="{{v['url']}}">{{v['title']}}</a></li>
+      {% end %}
+	</ul>
+  </nav>
+  <div id="main">
+    <div id="content">
+      {% block content %}{% end %}
+        <aside role=sidebar>
+            {% block sidebar %}
+            <section>
+                <h1>Recent Posts</h1>
+                <ul id="recent_posts">
+                    {% for v in Q.recentPosts() %}
+                    <li class="post">
+                        <a href="{{v.url}}">{{v.title}}</a>
+                    </li>
+                    {% end %}
+                </ul>
+            </section>
+
+            <section>
+                <h1>Category</h1>
+                <ul id="Category_list">
+                    {% for v in Q.categoryList() %}
+                    <li class="category">
+                        <a title="{{v.name}}" href="/category/{{ url_escape( v.name ) }}/">{{v.name}} <span class="tag_meta">({{v.count}})</span></a>
+                    </li>
+                    {% end %}
+                </ul>
+            </section>
+
+            <section>
+                <h1>Tags</h1>
+                <p id="top_tags">
+                    {% for v in Q.tagsList() %}
+                    <a title="{{v.name}}" href="/tag/{{ url_escape( v.name ) }}/">{{v.name}}</a> <span class="tag_meta">({{v.count}})</span>
+                    {% end %}
+                </p>
+            </section>
+            {% end %}
+        </aside>
+    </div>
+  </div>
+  <footer>
+	<p>
+	  Copyright &copy; 2012
+	  <span class="credit">Powered by <a href="http://qcoreblog.sinaapp.com/">Qcore Blog</a></span> -
+	  <span class="credit">Theme by <a href="http://www.octopress.org/">Octopress</a></span>
+        Time : {{ handler.request_time() }} sec
+        <a target="_blank" href="http://sae.sina.com.cn"><img title="Powered by Sina App Engine" src="http://static.sae.sina.com.cn/image/poweredby/117X12px.gif"></a>
+	</p>
+  </footer>
+</body>
+</html>
