@@ -1,5 +1,7 @@
-Qcore Blog 是基于 tornado, html5 运行在 SAE 上小巧，简单，高效的Python Blog
----------------------------------------------------------------------------
+Qcore Blog 是运行在 SAE 上
+-------------------------------------------
+### 基于 tornado, html5 小巧，简单，高效的Python Blog。
+
 
 ### 特色功能:
 
@@ -16,14 +18,22 @@ Qcore Blog 是基于 tornado, html5 运行在 SAE 上小巧，简单，高效的
 - Category 和 Tags 双层支持，更好的为文章分类
 - 强劲的性能与安全, SAE 应用体检 **A级**
 
+### 开源下载：
+
+- Qcore Blog 基于Apache Licene 2.0 协议发布
+- Qcore Blog 的源码托管在 gitHub（[https://github.com/vfasky/qcoreblog](https://github.com/vfasky/qcoreblog)） 上，期待有兴趣的同学一起完善！
+- 下载 [Qcore Blog v1.0](http://qcoreblog.sinaapp.com/page/download.html)
+
 ### 安装方法:
 
 1. 将代码上传到 SAE
 2. 开启 MySQL , Memcache( 默认情况下,只需1M )
 3. 建立一个名为 "storage" 的 Storage
-4. 访问你的应用,程序会引导你完成安装
+4. 访问你的应用( http://{app_id}.sinaapp.com/install ),程序会引导你完成安装
 
 ### 备注:
 
 - 后台是基于html5开发的,请使用 chrome , firefox 等现代浏览器访问
 - 程序自带一个 "Markdow 编辑器" 插件, 在后台开启后,支持 Markdow 语法, 并且支持拉风的:拖拉上传
+
+
