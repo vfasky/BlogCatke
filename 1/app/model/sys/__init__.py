@@ -6,6 +6,8 @@ from core.web import validators
 import app.model.uc
 import tornado.escape
 
+
+
 '''
 配置表
 '''
@@ -39,6 +41,10 @@ class options(db.base):
 
         self._options[ key ] = value
 
+    def __delitem__(self, item):
+        key = item.strip()
+        self.delete('[name] = %s AND [user_id] = 0' , key)
+
     def __getitem__(self, item):
         key = item.strip()
 
@@ -52,6 +58,98 @@ class options(db.base):
         value = tornado.escape.json_decode( data['value'] )
         self._options[ key ] = value
         return value
+
+'''
+插件
+'''
+class plugin(db.base):
+
+    list = False
+
+    def __init__(self):
+        db.base.__init__(self)
+        self._option = options()
+
+    @classmethod
+    def getInstantiate(cls,name):
+        pluginName = 'app.plugin.' + name.strip()
+        import sys
+        __import__( pluginName )
+        return getattr( sys.modules['app.plugin.' + name] , name )()
+
+    def getList(self):
+        list = self._option['plugin_list']
+        if list:
+            return list
+        return []
+
+    # 取激活的插件列表
+    def list(self):
+        if plugin.list:
+            return plugin.list
+
+        plugin.list = {
+            'beforeExecute' : {} ,
+            'beforeRender' : {} ,
+        }
+
+        list = self.getList()
+        if list :
+            for name in list:
+                interfaces = self.getInterface(name)
+                for cfg in interfaces:
+                    if False == plugin.list[ cfg.type ].has_key( cfg.target ):
+                        plugin.list[ cfg.type ][ cfg.target ] = []
+                    plugin.list[ cfg.type ][ cfg.target ].append( { 'name' : name , 'action' : cfg.action } )
+
+        return plugin.list
+
+    # 添加插件
+    def add(self , name ,**args):
+        list = self.getList()
+        if name not in list :
+            list.append( name )
+            self.setData( name , **args )
+
+    # 移除插件
+    def remove(self,name):
+        list = self.getList()
+        if name in list:
+            del list[ name ]
+            self.delData( name )
+
+    def getData(self,name):
+        key = 'plugin:' + name.strip()
+        return self._option[ key ]
+
+    def delData(self,name):
+        key = 'plugin:' + name.strip()
+        del self._option[ key ]
+
+    def setData(self,name,**args):
+        key = 'plugin:' + name.strip()
+
+        args['config'] = args.has_key('config') and args['config'] or {}
+        args['interface'] = args.has_key('interface') and args['interface'] or []
+
+        self._option[ key ] = args
+
+    def _getData(self,name,key):
+        data = self.getData(name)
+        if data and data.has_key( key ):
+            return data[ key ]
+        return None
+
+    def getConfig(self,name):
+        return self._getData(name,'config')
+
+    def getInterface(self,name):
+        return self._getData(name,'interface')
+
+    def getDesc(self,name):
+        return self._getData(name,'desc')
+
+
 
 '''
 权限控制表

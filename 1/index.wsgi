@@ -64,6 +64,7 @@ app = tornado.wsgi.WSGIApplication([
     (r"/admin/tags", app.controller.admin.tags),
     (r"/admin/upload", app.controller.admin.upload),
     (r"/admin/comment", app.controller.admin.comment),
+    (r"/admin/plugin", app.controller.admin.plugin),
 ], **settings)
 
 application = sae.create_wsgi_app(app)

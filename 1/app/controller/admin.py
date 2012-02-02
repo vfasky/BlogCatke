@@ -177,6 +177,52 @@ class option(core.web.RequestHandler):
         self.redirect('/admin/option')
 
 '''
+插件管理
+'''
+class plugin(core.web.RequestHandler):
+
+    def getPlugins(self):
+        path = os.path.join( self.settings['root_path'] , 'app' , 'plugin' )
+        init = str( os.path.join( path , '__init__.py') )
+        key  = init.split( '__init__.py' )
+
+        import glob
+        list = glob.glob( os.path.join( path , '*.py') )
+
+        plugins = []
+        for name in list:
+            name = str(name)
+            if init != name:
+                plugins.append( name.replace( key[0] , '' ).replace('.py' , '') )
+
+        return plugins
+
+    def getInfo(self,name):
+        plugin = app.model.sys.plugin.getInstantiate(name)
+
+        return {
+            'desc' : plugin.__class__.__doc__ ,
+            'isConfig' : plugin.config() and True or False ,
+            'name' : name ,
+        }
+
+
+    def get(self):
+        enables = app.model.sys.plugin().getList()
+        plugins = self.getPlugins()
+
+        list = []
+        for name in plugins:
+            if name not in enables:
+                list.append( self.getInfo(name) )
+
+        enableList = []
+        for name in enables:
+            enableList.append( self.getInfo(name) )
+
+        print enableList
+
+'''
 上传
 '''
 class upload(core.web.RequestHandler):
