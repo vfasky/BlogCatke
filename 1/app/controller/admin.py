@@ -30,7 +30,7 @@ class BlogHandler(core.web.RequestHandler):
 '''
 安装
 '''
-class install(BlogHandler):
+class install(core.web.RequestHandler):
     # 是否容许安装
     def allowInstallation(self):
         if False == self.mysqlIsConnection() :
