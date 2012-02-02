@@ -304,7 +304,7 @@ class plugin(BlogHandler):
 上传
 '''
 class upload(BlogHandler):
-    @app.controller.beforeExecute
+
     @core.web.acl
     def post(self):
 
@@ -313,7 +313,7 @@ class upload(BlogHandler):
 
         import hashlib
 
-        fileName = self.get_argument('filename')
+        fileName = str( self.get_argument('filename') )
         list = fileName.split('.')
         suffix = list[ len(list) - 1 ]
 

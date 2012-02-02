@@ -56,12 +56,12 @@ Qcore.xhrUpload = function( cfg ){
     };
 
     xhr.sendAsBinary(["--" + boundary,
-        "Content-Disposition: form-data; name=\"filedata\"; filename=\"" + file.name + "\"",
+        "Content-Disposition: form-data; name=\"filedata\"; filename=\"" + encodeURIComponent(file.name) + "\"",
         "Content-Type: " + file.type + "\r\n",
         cfg.data,
         "--" + boundary,
         "Content-Disposition: form-data; name=\"filename\"\r\n",
-        file.name,
+        encodeURIComponent(file.name),
         "--" + boundary + "--"].join("\r\n"));
 }
 
