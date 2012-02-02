@@ -8,7 +8,7 @@ class editMarkdown(app.plugin.base):
     Markdow 编辑器
     '''
 
-    # 激活插件是执行
+    # 激活插件时执行
     def activate(self):
         self.addInterface('beforeRender' , target = 'app.controller.admin.fatArticle' , action = 'initEdit')
         self.addInterface('beforeRender' , target = 'app.controller.admin.fatPage' , action = 'initEdit')
