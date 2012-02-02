@@ -15,7 +15,7 @@
             <pubDate>{{ Q.date("%a, %d %b %Y %H:%M:%S +0000" , post.created) }}</pubDate>
             <dc:creator>{{ Q.getNicknameById( post.user_id ) }}</dc:creator>
             <category>{{ Q.getPostCategoryById( post.id )['name'] }}</category>
-            <content:encoded><![CDATA[ {{ Q.markdown( post.text ) }} ]]></content:encoded>
+            <content:encoded><![CDATA[ {{ post.text }} ]]></content:encoded>
         </item>
         {% end %}
     </channel>

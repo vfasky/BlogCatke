@@ -8,24 +8,16 @@
 {% end %}
 
 {% block head-more %}
-<link rel="stylesheet" type="text/css" href="{{ static_url('js/markitup/skins/simple/style.css') }}" />
-<link rel="stylesheet" type="text/css" href="{{ static_url('js/markitup/sets/markdown/style.css') }}" />
-
-<script type="text/javascript" src="{{ static_url('js/bootstrap-tabs.js') }}"></script>
-
-<script type="text/javascript" src="{{ static_url('js/qcore.js') }}"></script>
-<script type="text/javascript" src="{{ static_url('js/markitup/jquery.markitup.js') }}"></script>
-<script type="text/javascript" src="{{ static_url('js/markdown.js') }}"></script>
-
 <link rel="stylesheet" type="text/css" href="{{ static_url('js/tokeninput/token-input-mac.css') }}" />
-
+<script type="text/javascript" src="{{ static_url('js/bootstrap-tabs.js') }}"></script>
 <script type="text/javascript" src="{{ static_url('js/jquery.tokeninput.js') }}"></script>
 <script type="text/javascript">
+    window.articleForm = {}
     jQuery(function(){
         // 表单
-        var form = new Qform( { url : '' } ,{{ form.toJson() }} , [ {'label' : '发表'} ] );
+        form = new Qform( { url : '' } ,{{ form.toJson() }} , [ {'label' : '发表'} ] );
         form.setValues( {{ json_encode(data) }} )
-
+        window.articleForm = form
         //分配侧栏
         form.dom().wrapInner('<div class="span11"></div>');
         var sidebar = jQuery('<div class="span5" id="article-sidebar"></div>');
@@ -74,68 +66,7 @@
         } );
         tagsItem.parent().append('<span class="help-block">请以半角空格隔开</span>');
 
-        // 加入编辑器 & 预览
-        var previewBox = jQuery('<div class="article-preview"></div>');
-        var converter = new Showdown.converter();
 
-        //扩展编辑器
-        var editor = form.dom().find('textarea');
-        var QcoreEditWidth = new Qcore.editor( editor );
-
-        // mIu nameSpace to avoid conflict.
-        var miu = {
-            markdownTitle: function(markItUp, char) {
-                heading = '';
-                n = $.trim(markItUp.selection||markItUp.placeHolder).length;
-                for(i = 0; i < n; i++) {
-                    heading += char;
-                }
-                return '\n'+heading;
-            }
-        }
-
-        var QcoreMarkDownSettings = {
-            previewParserPath:	'',
-            onShiftEnter:		{keepDefault:false, openWith:'\n\n'},
-            markupSet: [
-                {name:'First Level Heading', key:'1', placeHolder:'Your title here...', closeWith:function(markItUp) { return miu.markdownTitle(markItUp, '=') } },
-                {name:'Second Level Heading', key:'2', placeHolder:'Your title here...', closeWith:function(markItUp) { return miu.markdownTitle(markItUp, '-') } },
-                {name:'Heading 3', key:'3', openWith:'### ', placeHolder:'Your title here...' },
-                {name:'Heading 4', key:'4', openWith:'#### ', placeHolder:'Your title here...' },
-                {name:'Heading 5', key:'5', openWith:'##### ', placeHolder:'Your title here...' },
-                {name:'Heading 6', key:'6', openWith:'###### ', placeHolder:'Your title here...' },
-                {separator:'---------------' },
-                {name:'粗体', key:'B', openWith:'**', closeWith:'**'},
-                {name:'斜体', key:'I', openWith:'_', closeWith:'_'},
-                {separator:'---------------' },
-                {name:'无序列表', openWith:'- ' },
-                {name:'有序列表', openWith:function(markItUp) {
-                    return markItUp.line+'. ';
-                }},
-                {separator:'---------------' },
-                {name:'图片', key:'P', beforeInsert: QcoreEditWidth.widget['photo'] },
-                {name:'连接/附件', key:'L', beforeInsert: QcoreEditWidth.widget['link'] },
-                {separator:'---------------'},
-                {name:'引用', openWith:'> '},
-                {name:'代码', key:'D' , openWith:'(!(\t|!|`)!)', closeWith:'(!(`)!)'}
-            ]
-        }
-
-        editor.markItUp(QcoreMarkDownSettings).keyup(function(){
-                                                        var data = jQuery(this).val();
-                                                        var html = converter.makeHtml( data );
-                                                        previewBox.html(html)
-                                                    });
-
-        {% if data.has_key('id') %}
-            var data = form.dom().find('textarea').val();
-            var html = converter.makeHtml( data );
-            previewBox.html(html)
-        {% end %}
-
-
-
-        previewBox.appendTo( form.dom().find('.markItUpFooter') );
 
     });
 </script>

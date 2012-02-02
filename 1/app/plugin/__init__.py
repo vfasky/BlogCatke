@@ -13,15 +13,17 @@ PLUGIN_TYPE = ( 'beforeExecute' , 'beforeRender' )
 class base:
 
     def __init__(self):
+        self._form = Qform
         self._db = Qdb.base()
-        # 连接的目录
+        # 连接的目标
         self._target = []
         self._config = app.model.sys.plugin().getConfig( self.__class__.__name__ )
+
 
     # 取配置
     def getConfig(self):
         # 可以重写,定义默认值
-        return self._config
+        return self._config and self._config or {}
 
     # 添加接口位置
     def addInterface(self , type , **cfg):
@@ -36,11 +38,17 @@ class base:
             return True
         return False
 
+
+
     # 配置表单,返回False为没有
     def config(self):
         return False
 
     # 激活插件时执行
     def activate(self):
+        return False
+
+    # 禁用是执行
+    def disable(self):
         return False
 

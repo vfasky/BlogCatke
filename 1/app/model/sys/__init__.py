@@ -64,7 +64,12 @@ class options(db.base):
 '''
 class plugin(db.base):
 
-    list = False
+    pluginList = {
+        'beforeExecute' : {} ,
+        'beforeRender' : {} ,
+    }
+
+    listIsCache = False
 
     def __init__(self):
         db.base.__init__(self)
@@ -78,45 +83,52 @@ class plugin(db.base):
         return getattr( sys.modules['app.plugin.' + name] , name )()
 
     def getList(self):
-        list = self._option['plugin_list']
-        if list:
-            return list
-        return []
+        if None == self._option['plugin_list']:
+            self._option['plugin_list'] = []
+        return self._option['plugin_list']
 
     # 取激活的插件列表
     def list(self):
-        if plugin.list:
-            return plugin.list
+        #print plugin.listIsCache
+        if plugin.listIsCache:
+            return plugin.pluginList
 
-        plugin.list = {
+        plugin.pluginList = {
             'beforeExecute' : {} ,
             'beforeRender' : {} ,
         }
 
         list = self.getList()
-        if list :
-            for name in list:
-                interfaces = self.getInterface(name)
-                for cfg in interfaces:
-                    if False == plugin.list[ cfg.type ].has_key( cfg.target ):
-                        plugin.list[ cfg.type ][ cfg.target ] = []
-                    plugin.list[ cfg.type ][ cfg.target ].append( { 'name' : name , 'action' : cfg.action } )
-
-        return plugin.list
+        for name in list:
+            interfaces = self.getInterface(name)
+            for cfg in interfaces:
+                if False == plugin.pluginList[ cfg['type'] ].has_key( cfg['target'] ):
+                    plugin.pluginList[ cfg['type'] ][ cfg['target'] ] = []
+                plugin.pluginList[ cfg['type'] ][ cfg['target'] ].append( { 'name' : name , 'action' : cfg['action'] } )
+        plugin.listIsCache = True
+        return plugin.pluginList
 
     # 添加插件
     def add(self , name ,**args):
         list = self.getList()
         if name not in list :
             list.append( name )
+            self._option['plugin_list'] = list
             self.setData( name , **args )
+            # 清缓存
+            plugin.listIsCache = False
+            self.list()
 
     # 移除插件
     def remove(self,name):
         list = self.getList()
         if name in list:
-            del list[ name ]
             self.delData( name )
+            del list[ list.index(name) ]
+            self._option['plugin_list'] = list
+            # 清缓存
+            plugin.listIsCache = False
+            self.list()
 
     def getData(self,name):
         key = 'plugin:' + name.strip()
@@ -138,7 +150,7 @@ class plugin(db.base):
         data = self.getData(name)
         if data and data.has_key( key ):
             return data[ key ]
-        return None
+        return {}
 
     def getConfig(self,name):
         return self._getData(name,'config')

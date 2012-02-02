@@ -19,6 +19,9 @@
 
   <script src="http://lib.sinaapp.com/js/jquery/1.7/jquery.min.js"></script>
   <script src="{{ static_url('template/octopress/js/main.js') }}"></script>
+    {% for header in plugin_header %}
+    {{header}}
+    {% end %}
 
 
 </head>
@@ -93,5 +96,8 @@
         <a target="_blank" href="http://sae.sina.com.cn"><img title="Powered by Sina App Engine" src="http://static.sae.sina.com.cn/image/poweredby/117X12px.gif"></a>
 	</p>
   </footer>
+  {% for footer in plugin_footer %}
+  {{footer}}
+  {% end %}
 </body>
 </html>

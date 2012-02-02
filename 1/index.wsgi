@@ -45,7 +45,6 @@ app = tornado.wsgi.WSGIApplication([
     (r"/tag/(.+)/$", app.controller.default.tag),
     (r"/category/(.+)/$", app.controller.default.category),
     (r"/feed/", app.controller.default.feed),
-
     (r"/login", app.controller.admin.login),
     (r"/logout", app.controller.admin.logout),
     (r"/install", app.controller.admin.install),

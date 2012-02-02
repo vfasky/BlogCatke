@@ -1,28 +1,45 @@
 {% extends "base.html" %}
-{% block title %}风格列表{% end %}
+{% block title %}插件管理{% end %}
 
 {% block head-more %}
 
 <script type="text/javascript">
     jQuery(function(){
+        var data = {{ json_encode( list ) }};
+        jQuery('#data-list').find('tbody span.notice').each(function( k ){
+            var values = data[ k ];
+            var self = jQuery(this);
+            if( values )
+            {
+                //启用
+                self.click(function(){
+                    jQuery.post('?type=enable' , values , function(json){
+                        if(json.success)
+                        {
+                            window.location.href = window.location.href
+                        }
+                    } , 'json')
+                    return false;
+                })
+            }
 
-        // 设置风格
+        });
+        {% if len(enableList) > 0 %}
+        //已启用插件管理
         (function(){
-            var data = {{ json_encode( templates ) }};
-
-            jQuery('#data-list').find('tbody span').each(function( k ){
-                var value = data[ k ];
+            var data = {{ json_encode( enableList ) }};
+            jQuery('#enable-data-list').find('tbody span.important').each(function( k ){
+                var values = data[ k ];
                 var self = jQuery(this);
-
-                if( self.is('.notice') && value )
+                if( values )
                 {
+                    //禁用
                     self.click(function(){
-                        jQuery.post('',{ name : value } , function(json){
-                            if( json.success )
+                        jQuery.post('?type=disable' , values , function(json){
+                            if(json.success)
                             {
-                                return window.location.href = window.location.href;
+                                window.location.href = window.location.href
                             }
-                            alert( json.msg )
                         } , 'json')
                         return false;
                     })
@@ -30,31 +47,62 @@
 
             });
         })();
+        {% end %}
     });
 </script>
 {% end %}
 
 {% block wrap %}
-<table class="bordered-table zebra-striped" id="data-list" style="margin-top: 20px;">
+
+{% if len(enableList) > 0 %}
+<h3 style="margin-top: 20px;">已激活插件 </h3>
+<table class="bordered-table zebra-striped" id="enable-data-list">
     <thead>
     <tr>
         <th>名称</th>
+        <th>描述</th>
         <th>操作</th>
     </tr>
     </thead>
     <tbody>
-        {% for name in templates %}
+        {% for v in enableList %}
         <tr>
-            <td>{{name}}</td>
+            <td>{{v['name']}}</td>
+            <td>{{v['desc']}}</td>
             <td>
-                {% if name != siteTemplate %}
-                <span class="label notice" style="cursor: pointer" title="启用">Enable</span>
-                {% else %}
-                <span class="label" >Current</span>
+                {% if v['isConfig'] %}
+                <a href="?type=config&name={{v['name']}}" class="label warning" title="设置">Config</a>
                 {% end %}
+                <span class="label important" style="cursor: pointer" title="禁用">Disable</span>
+
             </td>
         </tr>
         {% end %}
     </tbody>
 </table>
+{% end %}
+
+{% if len(list) > 0 %}
+<h3 style="margin-top: 20px;">可用插件 </h3>
+<table class="bordered-table zebra-striped" id="data-list">
+    <thead>
+    <tr>
+        <th>名称</th>
+        <th>描述</th>
+        <th>操作</th>
+    </tr>
+    </thead>
+    <tbody>
+        {% for v in list %}
+        <tr>
+            <td>{{v['name']}}</td>
+            <td>{{v['desc']}}</td>
+            <td>
+                <span class="label notice" style="cursor: pointer" title="启用">Enable</span>
+            </td>
+        </tr>
+        {% end %}
+    </tbody>
+</table>
+{% end %}
 {% end %}}

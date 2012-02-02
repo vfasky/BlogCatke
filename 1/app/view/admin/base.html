@@ -6,6 +6,11 @@
 <script type="text/javascript" src="{{ static_url('js/bootstrap-modal.js') }}"></script>
 <script type="text/javascript" src="{{ static_url('js/qcommon.js') }}"></script>
 {% block head-more %}{% end %}
+
+{% for header in plugin_header %}
+    {{header}}
+{% end %}
+
 {% end %}
 {% block body %}
 <div class="header">
@@ -47,6 +52,7 @@
                     <li><a href="/admin/comment">评论设置(disqus)</a></li>
                     <li class="divider"></li>
                     <li><a href="/admin/template">风格</a></li>
+                    <li><a href="/admin/plugin">插件</a></li>
                     <li class="divider"></li>
                     <li><a href="/admin/category">文章分类</a></li>
                     <li><a href="/admin/tags">tag 管理</a></li>
@@ -102,4 +108,8 @@
         });
     })(jQuery);
 </script>
+
+    {% for footer in plugin_footer %}
+    {{footer}}
+    {% end %}
 {% end %}

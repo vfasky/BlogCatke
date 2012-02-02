@@ -221,8 +221,6 @@ class base:
     '''
     def delete(self,query,*parameters):
         query =  self.sqlStr(query)
-        print 'DELETE FROM `'+ self.db_name +'` WHERE ' + query
-        print parameters
         return self.db.execute('DELETE FROM `'+ self.db_name +'` WHERE ' + query , *parameters )
 
     # 将 [ , ] 转换成 `

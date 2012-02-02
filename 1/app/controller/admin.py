@@ -9,16 +9,27 @@ import os
 import app.model.sys
 import app.model.uc
 import app.model.bc
+import app.controller
 try:
     import sae.storage
     isDev = False
 except:
     isDev = True
 
+class BlogHandler(core.web.RequestHandler):
+
+    @app.controller.beforeRender
+    def render(self, template_name, **kwargs):
+        if 'plugin_header' not in kwargs:
+            kwargs['plugin_header'] = []
+        if 'plugin_footer' not in kwargs:
+            kwargs['plugin_footer'] = []
+        return self.write(self.render_string( template_name, **kwargs))
+
 '''
 安装
 '''
-class install(core.web.RequestHandler):
+class install(BlogHandler):
     # 是否容许安装
     def allowInstallation(self):
         if False == self.mysqlIsConnection() :
@@ -142,7 +153,7 @@ class install(core.web.RequestHandler):
 '''
 基本设置
 '''
-class option(core.web.RequestHandler):
+class option(BlogHandler):
     # 配置
     _options = app.model.sys.options()
 
@@ -154,6 +165,7 @@ class option(core.web.RequestHandler):
         form.add( core.web.form.Textarea('desc' , 'notEmpty' , label='站点描述') )
         return form
 
+    @app.controller.beforeExecute
     @core.web.acl
     def get(self):
         if not option._options['site']:
@@ -166,6 +178,7 @@ class option(core.web.RequestHandler):
 
         self.render("admin/option.html" ,  data = option._options['site'] , form = self.form() )
 
+    @app.controller.beforeExecute
     @core.web.acl
     def post(self):
         form = self.form()
@@ -179,8 +192,8 @@ class option(core.web.RequestHandler):
 '''
 插件管理
 '''
-class plugin(core.web.RequestHandler):
-
+class plugin(BlogHandler):
+    # 取插件列表
     def getPlugins(self):
         path = os.path.join( self.settings['root_path'] , 'app' , 'plugin' )
         init = str( os.path.join( path , '__init__.py') )
@@ -197,18 +210,63 @@ class plugin(core.web.RequestHandler):
 
         return plugins
 
+    # 取插件信息
     def getInfo(self,name):
         plugin = app.model.sys.plugin.getInstantiate(name)
 
         return {
-            'desc' : plugin.__class__.__doc__ ,
+            'desc' : tornado.escape.linkify( plugin.__class__.__doc__ ) ,
             'isConfig' : plugin.config() and True or False ,
             'name' : name ,
         }
 
+    # 启用插件
+    def enable(self,name):
+        pluginModel = app.model.sys.plugin()
+        plugin = pluginModel.getInstantiate( name )
+        # 初始化插件
+        plugin.activate()
+        cfg = {
+            'interface' : plugin._target ,
+            'config' : plugin.getConfig() ,
+            'desc' : plugin.__class__.__doc__
+        }
+        pluginModel.add(name , **cfg)
+        self.write( tornado.escape.json_encode({'success' : True}) )
+        return True
 
+    # 禁用插件
+    def disable(self,name):
+        pluginModel = app.model.sys.plugin()
+        if name in pluginModel.getList():
+            plugin = pluginModel.getInstantiate( name )
+            # 禁用插件
+            plugin.disable()
+            pluginModel.remove(name)
+        self.write( tornado.escape.json_encode({'success' : True}) )
+        return True
+
+    # 取插件表单
+    def getForm(self,name):
+        enables = app.model.sys.plugin().getList()
+        if name in enables:
+            pluginModel = app.model.sys.plugin()
+            plugin = pluginModel.getInstantiate(name)
+            form = plugin.config()
+            return form
+        return False
+
+    @app.controller.beforeExecute
+    @core.web.acl
     def get(self):
         enables = app.model.sys.plugin().getList()
+        # 插件配置
+        if self.get_argument('type' , False) == 'config' and self.get_argument('name' , False) :
+            name = self.get_argument('name')
+            form = self.getForm( name )
+            if form:
+                return self.render("admin/plugin-config.html" , data = app.model.sys.plugin().getConfig(name) ,  form = form , info = self.getInfo(name) )
+
         plugins = self.getPlugins()
 
         list = []
@@ -220,12 +278,32 @@ class plugin(core.web.RequestHandler):
         for name in enables:
             enableList.append( self.getInfo(name) )
 
-        print enableList
+        self.render("admin/plugin.html" ,  enableList = enableList , list = list )
+
+    @app.controller.beforeExecute
+    @core.web.acl
+    def post(self):
+        type = self.get_argument('type' , False)
+        if type:
+            if 'enable' == type and self.get_argument('name' , False):
+                return self.enable( self.get_argument('name') )
+            elif 'disable' == type and self.get_argument('name' , False):
+                return self.disable( self.get_argument('name') )
+            elif 'config' == type and self.get_argument('name' , False):
+                name = self.get_argument('name')
+                form = self.getForm( name )
+                if form and form.validators( self.request.arguments ):
+                    pluginModel = app.model.sys.plugin()
+                    data = pluginModel.getData( name )
+                    data['config'] = form.values
+                    pluginModel.setData(name , **data)
+                    self.redirect('/admin/plugin')
 
 '''
 上传
 '''
-class upload(core.web.RequestHandler):
+class upload(BlogHandler):
+    @app.controller.beforeExecute
     @core.web.acl
     def post(self):
 
@@ -253,13 +331,14 @@ class upload(core.web.RequestHandler):
 '''
 评论管理
 '''
-class comment(core.web.RequestHandler):
+class comment(BlogHandler):
 
     def form(self):
         form = core.web.form.Form()
         form.add( core.web.form.Input('disqus_shortname', 'notEmpty' , label='Disqus Site Shortname:') )
         return form
 
+    @app.controller.beforeExecute
     @core.web.acl
     def get(self):
         if not option._options['site_comment']:
@@ -269,6 +348,7 @@ class comment(core.web.RequestHandler):
 
         self.render("admin/comment.html" ,  data = option._options['site_comment'] , form = self.form() )
 
+    @app.controller.beforeExecute
     @core.web.acl
     def post(self):
         form = self.form()
@@ -282,7 +362,7 @@ class comment(core.web.RequestHandler):
 '''
 tag 管理
 '''
-class tags(core.web.RequestHandler):
+class tags(BlogHandler):
 
     def form(self):
         form = core.web.form.Form()
@@ -290,6 +370,7 @@ class tags(core.web.RequestHandler):
         form.add( core.web.form.Input('name' , 'notEmpty' , label='名称') )
         return form
 
+    @app.controller.beforeExecute
     @core.web.acl
     def get(self):
         tags = app.model.bc.meta().find('[type] = %s' , 'tag')\
@@ -299,6 +380,7 @@ class tags(core.web.RequestHandler):
 
         self.render("admin/tags.html" ,  tags = tags , form = self.form() )
 
+    @app.controller.beforeExecute
     @core.web.acl
     def post(self):
         form = self.form()
@@ -328,7 +410,7 @@ class tags(core.web.RequestHandler):
 '''
 文章分类
 '''
-class category(core.web.RequestHandler):
+class category(BlogHandler):
 
     def form(self):
         form = core.web.form.Form()
@@ -336,6 +418,7 @@ class category(core.web.RequestHandler):
         form.add( core.web.form.Input('name' , 'notEmpty' , label='名称') )
         return form
 
+    @app.controller.beforeExecute
     @core.web.acl
     def get(self):
         categorys = app.model.bc.meta().find('[type] = %s' , 'category')\
@@ -345,6 +428,7 @@ class category(core.web.RequestHandler):
 
         self.render("admin/category.html" ,  categorys = categorys , form = self.form() )
 
+    @app.controller.beforeExecute
     @core.web.acl
     def post(self):
         form = self.form()
@@ -375,7 +459,7 @@ class category(core.web.RequestHandler):
 '''
 风格设置
 '''
-class template(core.web.RequestHandler):
+class template(BlogHandler):
 
     def getTemplates(self):
         path = os.path.join( self.settings['template_path'] , 'template' )
@@ -385,6 +469,7 @@ class template(core.web.RequestHandler):
                 templates.append( name )
         return  templates
 
+    @app.controller.beforeExecute
     @core.web.acl
     def get(self):
         templates = self.getTemplates()
@@ -394,6 +479,7 @@ class template(core.web.RequestHandler):
 
         self.render('admin/template.html' , siteTemplate = option._options['site_templates'] , templates = templates )
 
+    @app.controller.beforeExecute
     @core.web.acl
     def post(self):
         name = self.get_argument('name' , False)
@@ -413,7 +499,9 @@ class template(core.web.RequestHandler):
 '''
 文章列表
 '''
-class articles(core.web.RequestHandler):
+class articles(BlogHandler):
+
+    @app.controller.beforeExecute
     @core.web.acl
     def get(self):
         contentModel = app.model.bc.content()
@@ -438,7 +526,8 @@ class articles(core.web.RequestHandler):
 '''
 页面列表
 '''
-class pages(core.web.RequestHandler):
+class pages(BlogHandler):
+    @app.controller.beforeExecute
     @core.web.acl
     def get(self):
         contentModel = app.model.bc.content()
@@ -461,7 +550,8 @@ class pages(core.web.RequestHandler):
 '''
 删除文章
 '''
-class delArticle(core.web.RequestHandler):
+class delArticle(BlogHandler):
+    @app.controller.beforeExecute
     @core.web.acl
     def post(self):
         id = self.get_argument('id' , False)
@@ -472,7 +562,7 @@ class delArticle(core.web.RequestHandler):
 '''
 写页面
 '''
-class fatPage(core.web.RequestHandler):
+class fatPage(BlogHandler):
 
     def form(self):
         form = core.web.form.Form()
@@ -485,6 +575,7 @@ class fatPage(core.web.RequestHandler):
 
         return form
 
+    @app.controller.beforeExecute
     @core.web.acl
     def get(self):
         data = {}
@@ -496,6 +587,7 @@ class fatPage(core.web.RequestHandler):
         tags = app.model.bc.meta().find('[type] = %s' , 'tag').fields('[name]').getAll()
         self.render("admin/fatArticle.html" , form = self.form() , data =  data , tags = tags , thisTags = thisTags )
 
+    @app.controller.beforeExecute
     @core.web.acl
     def post(self):
         form = self.form()
@@ -552,7 +644,7 @@ class fatPage(core.web.RequestHandler):
 '''
 写文章
 '''
-class fatArticle(core.web.RequestHandler):
+class fatArticle(BlogHandler):
 
     def form(self):
         form = core.web.form.Form()
@@ -574,6 +666,7 @@ class fatArticle(core.web.RequestHandler):
 
         return form
 
+    @app.controller.beforeExecute
     @core.web.acl
     def get(self):
         data = {}
@@ -585,6 +678,7 @@ class fatArticle(core.web.RequestHandler):
         tags = app.model.bc.meta().find('[type] = %s' , 'tag').fields('[name]').getAll()
         self.render("admin/fatArticle.html" , form = self.form() , data =  data , tags = tags , thisTags = thisTags )
 
+    @app.controller.beforeExecute
     @core.web.acl
     def post(self):
         form = self.form()
@@ -654,7 +748,7 @@ class fatArticle(core.web.RequestHandler):
 '''
 个人资料
 '''
-class profile(core.web.RequestHandler):
+class profile(BlogHandler):
 
     def form(self):
         form = core.web.form.Form()
@@ -669,6 +763,7 @@ class profile(core.web.RequestHandler):
         form.add( core.web.form.Password('confirm' , 'notEmpty', label='确认密码') )
         return form
 
+    @app.controller.beforeExecute
     @core.web.acl
     def get(self):
         import urllib, hashlib
@@ -682,6 +777,7 @@ class profile(core.web.RequestHandler):
         gravatarUrl += urllib.urlencode({ 's': '100' })
         self.render("admin/profile.html" , userInfo = user , form = self.form() , data = data , passwordForm = self.passwordForm() , gravatarUrl = gravatarUrl )
 
+    @app.controller.beforeExecute
     @core.web.acl
     def post(self):
         form = self.form()
@@ -719,7 +815,7 @@ class profile(core.web.RequestHandler):
 '''
 会员管理
 '''
-class user(core.web.RequestHandler):
+class user(BlogHandler):
 
     def form(self):
         form = core.web.form.Form()
@@ -740,7 +836,8 @@ class user(core.web.RequestHandler):
         form.add( core.web.form.Checkbox('roleIds' , label = '角色' , data = roles ) )
         return form
 
-    #@core.web.acl
+    @app.controller.beforeExecute
+    @core.web.acl
     def get(self):
 
         page = self.get_argument('page' , 1)
@@ -756,7 +853,8 @@ class user(core.web.RequestHandler):
 
         self.render("admin/user.html" , form = self.form() , list = list , roleForm = self.roleForm() , pagination = pagination )
 
-   # @core.web.acl
+    @app.controller.beforeExecute
+    @core.web.acl
     def post(self):
         form = self.form()
         roleForm = self.roleForm()
@@ -798,7 +896,7 @@ class user(core.web.RequestHandler):
 '''
 权限控制
 '''
-class acl(core.web.RequestHandler):
+class acl(BlogHandler):
 
     def form(self):
         rolesData = app.model.sys.acl.getRoles()
@@ -811,6 +909,7 @@ class acl(core.web.RequestHandler):
         form.add( core.web.form.Checkbox('allow' , data = rolesData , label = '允许访问'  ) )
         return form
 
+    @app.controller.beforeExecute
     @core.web.acl
     def get(self):
         list = []
@@ -828,6 +927,7 @@ class acl(core.web.RequestHandler):
 
         self.render("admin/acl.html" , list = list , form = self.form()  )
 
+    @app.controller.beforeExecute
     @core.web.acl
     def post(self):
         model = app.model.sys.acl()
@@ -870,7 +970,7 @@ class acl(core.web.RequestHandler):
 角色管理
 '''
 
-class role(core.web.RequestHandler):
+class role(BlogHandler):
 
     def form(self):
         form = core.web.form.Form()
@@ -879,11 +979,13 @@ class role(core.web.RequestHandler):
         form.add( core.web.form.Input( 'name' , 'notEmpty' , label = '名称' ) )
         return form
 
+    @app.controller.beforeExecute
     @core.web.acl
     def get(self):
         roles = app.model.uc.role().find().getAll()
         self.render("admin/role.html" , roles = roles ,form = self.form() )
 
+    @app.controller.beforeExecute
     @core.web.acl
     def post(self):
         # 删除
@@ -909,7 +1011,8 @@ class role(core.web.RequestHandler):
 '''
 退出
 '''
-class logout(core.web.RequestHandler):
+class logout(BlogHandler):
+    @app.controller.beforeExecute
     def get(self):
         self.clear_acl_current_user()
         self.redirect("/login")
@@ -917,16 +1020,19 @@ class logout(core.web.RequestHandler):
 '''
 登陆
 '''
-class login(core.web.RequestHandler):
+class login(BlogHandler):
+
     def form(self):
         form = core.web.form.Form()
         form.add(core.web.form.Input('userEmail', 'notEmpty', 'isEmail', label='邮箱'))
         form.add(core.web.form.Password('password', 'notEmpty', label='密码'))
         return form
 
+    @app.controller.beforeExecute
     def get(self):
         self.render("login.html", form=self.form())
 
+    @app.controller.beforeExecute
     def post(self):
         import time
         time.sleep(3)

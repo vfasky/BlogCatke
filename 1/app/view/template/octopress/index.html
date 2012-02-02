@@ -12,7 +12,7 @@
       	<time datetime="{{ Q.date('%Y-%m-%d %H:%M' , post.created ) }}" pubdate>{{ Q.date('%Y-%m-%d %H:%M' , post.created ) }}</time>
         </p>
     </header>
-    <div class="entry-content">{{ Q.markdown( post.text ) }}</div>
+    <div class="entry-content">{{ post.text }}</div>
     <footer>
       <a rel="full-article" href="/{{ post.type }}/{{ url_escape( post.slug ) }}">Read On</a>
     </footer>

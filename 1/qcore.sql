@@ -91,6 +91,7 @@ INSERT INTO `sys_acl` VALUES ('11', '/admin/fatPage', '撰写页面', '[]', '[\"
 INSERT INTO `sys_acl` VALUES ('12', '/admin/category', '文章分类', '[]', '[\"admin\"]');
 INSERT INTO `sys_acl` VALUES ('13', '/admin/upload', '文件上传', '[]', '[\"admin\"]');
 INSERT INTO `sys_acl` VALUES ('14', '/admin/tags', 'tag 管理', '[]', '[\"admin\"]');
+INSERT INTO `sys_acl` VALUES ('14', '/admin/plugin', '插件管理', '[]', '[\"admin\"]');
 INSERT INTO `sys_options` VALUES ('0', 'site_templates', '\"octopress\"');
 INSERT INTO `sys_options` VALUES ('0', 'site', '{\"keywords\": \"sae,ptyhon,blog\", \"title\": \"Qcore\", \"subtitle\": \"\\u4eba\\u751f\\u82e6\\u77ed\\uff0c\\u6211\\u7528python\", \"desc\": \"Qcore blog\"}');
 

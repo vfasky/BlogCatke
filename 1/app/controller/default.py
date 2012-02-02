@@ -8,10 +8,12 @@ import core.web.form
 import app.model.uc
 import app.model.sys
 import app.model.bc
-import markdown2
+import app.controller
+
 import urllib
 import tornado.escape
 import pylibmc
+
 
 
 '''
@@ -27,9 +29,7 @@ class templatePlug:
     def include(self, template_name):
         return self._handler.render_string(self._path + template_name, **self._kwargs)
 
-    # 解释markdown
-    def markdown(self , txt):
-        return markdown2.markdown( txt )
+
 
     def date(self , format , timeStr):
         import time
@@ -102,6 +102,7 @@ class BlogHandler(core.web.RequestHandler):
     def options(self):
         return BlogHandler._options
 
+    @app.controller.beforeRender
     def render(self, template_name, **kwargs):
         kwargs['options'] = self._options
 
@@ -115,6 +116,11 @@ class BlogHandler(core.web.RequestHandler):
         if not template_name:
             template_name = 'default.html'
 
+        if 'plugin_header' not in kwargs:
+            kwargs['plugin_header'] = []
+        if 'plugin_footer' not in kwargs:
+            kwargs['plugin_footer'] = []
+
         return self.write(self.render_string(path + template_name, **kwargs))
 
 
@@ -122,6 +128,7 @@ class BlogHandler(core.web.RequestHandler):
 首页
 '''
 class index(BlogHandler):
+    @app.controller.beforeExecute
     def get(self):
         try:
             contentModel = app.model.bc.content()
@@ -155,6 +162,7 @@ class index(BlogHandler):
 feed
 '''
 class feed(BlogHandler):
+    @app.controller.beforeExecute
     def get(self):
         self.set_header('Content-Type','application/xml')
         mc = pylibmc.Client()
@@ -183,6 +191,7 @@ class feed(BlogHandler):
 分类
 '''
 class category(BlogHandler):
+    @app.controller.beforeExecute
     def get(self, name = False ):
         if name :
             name = tornado.escape.url_unescape( name )
@@ -207,6 +216,7 @@ class category(BlogHandler):
 tag
 '''
 class tag(BlogHandler):
+    @app.controller.beforeExecute
     def get(self, name = False ):
         if name :
             name = tornado.escape.url_unescape( name )
@@ -233,12 +243,13 @@ class tag(BlogHandler):
 POST
 '''
 class post(BlogHandler):
+    @app.controller.beforeExecute
     def get(self , slug = False):
         if False != slug:
             slug = tornado.escape.url_unescape( slug )
             post = app.model.bc.content().find('[slug] = %s AND [type] = %s AND [status] = %s' ,  slug , 'post' , 'publish' ).query()
             if post:
-                post['text'] = markdown2.markdown( post['text'] )
+
                 postTags = app.model.bc.content.tags( post['id'] )
 
                 siteComment = self.options()['site_comment'] and self.options()['site_comment'] or {}
@@ -251,12 +262,13 @@ class post(BlogHandler):
 页面
 '''
 class page(BlogHandler):
+    @app.controller.beforeExecute
     def get(self , slug = False):
         if False != slug:
             slug = tornado.escape.url_unescape( slug )
             page = app.model.bc.content().find('[slug] = %s AND [type] = %s AND [status] = %s' ,  slug , 'page' , 'publish' ).query()
             if page:
-                page['text'] = markdown2.markdown( page['text'] )
+
                 pageTags = app.model.bc.content.tags( page['id'] )
                 return self.render("page.html" , page=page, pageTags=pageTags)
 
