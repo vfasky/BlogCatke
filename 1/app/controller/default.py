@@ -200,7 +200,7 @@ class category(BlogHandler):
             db = metaModel.find().limitPage( page  , 10)\
                                  .join('[bc_meta_has_content] ON [bc_meta].[id] = [bc_meta_has_content].[meta_id]')\
                                  .join('[bc_content] ON [bc_meta_has_content].[content_id] = [bc_content].[id]')\
-                                 .where('[bc_meta].[name]  = %s AND [bc_content].[status] = %s' , name, 'publish')\
+                                 .where('[bc_meta].[name]  = %s AND [bc_content].[status] = %s AND [bc_meta].[type] = %s' , name, 'publish' , 'category')\
                                  .order('[bc_content].[id] DESC')\
                                  .fields('[bc_content].[id] , [bc_content].[title], '
                                          '[bc_content].[text] , [bc_content].[created] , '
@@ -225,7 +225,7 @@ class tag(BlogHandler):
             db = metaModel.find().limitPage( page  , 10)\
                                 .join('[bc_meta_has_content] ON [bc_meta].[id] = [bc_meta_has_content].[meta_id]')\
                                 .join('[bc_content] ON [bc_meta_has_content].[content_id] = [bc_content].[id]')\
-                                .where('[bc_meta].[name]  = %s AND [bc_content].[status] = %s' , name, 'publish')\
+                                .where('[bc_meta].[name]  = %s AND [bc_content].[status] = %s AND [bc_meta].[type] = %s' , name, 'publish' , 'tage')\
                                 .order('[bc_content].[id] DESC')\
                                 .fields('[bc_content].[id] , [bc_content].[title], '
                                         '[bc_content].[text] , [bc_content].[created] , '
