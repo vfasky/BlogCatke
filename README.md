@@ -31,9 +31,12 @@ Qcore Blog 是运行在 SAE 上
 3. 建立一个名为 "storage" 的 Storage
 4. 访问你的应用( http://{app_id}.sinaapp.com/install ),程序会引导你完成安装
 
+[附上安装图文教程](http://qcoreblog.sinaapp.com/post/QcoreBlog-setup-help.html)
+
 ### 备注:
 
 - 后台是基于html5开发的,请使用 chrome , firefox 等现代浏览器访问
 - 程序自带一个 "Markdow 编辑器" 插件, 在后台开启后,支持 Markdow 语法, 并且支持拉风的:拖拉上传
+
 
 
