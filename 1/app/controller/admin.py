@@ -1,6 +1,7 @@
 #coding=utf-8
 __author__ = 'vfasky'
 
+
 import core.web
 import core.web.form
 import tornado.escape
@@ -29,7 +30,7 @@ class BlogHandler(core.web.RequestHandler):
 '''
 安装
 '''
-class install(BlogHandler):
+class install(core.web.RequestHandler):
     # 是否容许安装
     def allowInstallation(self):
         if False == self.mysqlIsConnection() :
@@ -303,7 +304,7 @@ class plugin(BlogHandler):
 上传
 '''
 class upload(BlogHandler):
-    @app.controller.beforeExecute
+
     @core.web.acl
     def post(self):
 
@@ -312,7 +313,7 @@ class upload(BlogHandler):
 
         import hashlib
 
-        fileName = self.get_argument('filename')
+        fileName = str( self.get_argument('filename') )
         list = fileName.split('.')
         suffix = list[ len(list) - 1 ]
 
