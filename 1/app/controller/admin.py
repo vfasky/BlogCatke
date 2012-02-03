@@ -304,7 +304,7 @@ class plugin(BlogHandler):
 上传
 '''
 class upload(BlogHandler):
-
+    @app.controller.beforeExecute
     @core.web.acl
     def post(self):
 
