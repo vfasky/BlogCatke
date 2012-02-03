@@ -41,7 +41,7 @@ class Session:
         else :
             self.store = Session_Store_StaticClass()
 
-        self.time = 1800
+        self.time = 86400
         if session_id :
             self.session_id = session_id
         else :
