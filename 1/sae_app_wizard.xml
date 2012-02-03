@@ -1,0 +1,33 @@
+<appwizard>
+    <platform>
+        <services>
+            <!-- 初始化应用中启用的服务,根据需要启用 -->
+
+            <service name="storage" params="public">Storage</service>
+            <!-- 例：初始化一个域名为:mydomain的Storage，域属性为“public”，更多参数配置请参考Storage的API文档 -->
+
+            <service size="1M">Memcache</service>
+            <!-- 例：初始化Memcache，大小为30M -->
+
+            <service>Mysql</service>
+            <!-- 例：初始化Mysql -->
+        </services>
+
+        <appconfig>
+            <!-- appconfig配置，如果应用中用到了appconfig，则配置该段，具体配置方法，请参考appconfig的说明文档 -->
+            <tpl>
+                <![CDATA[
+                name: <<appname>>
+                version: <<version>>
+                handle:
+                - expire: if(path ~ "(.*)\.(js|css|jpg|png|gif)") time 31536000
+              ]]>
+            </tpl>
+        </appconfig>
+    </platform>
+
+    <code>
+        <!-- 初始化页面地址：即应用安装成功后跳转的地址，可以将应用安装脚本或数据库导入脚本写在该文件中 -->
+        <initScript>install</initScript>
+    </code>
+</appwizard>
