@@ -5,7 +5,7 @@ import core.web.form as Qform
 import core.db as Qdb
 import app.model.sys
 
-PLUGIN_TYPE = ( 'beforeExecute' , 'beforeRender' )
+PLUGIN_TYPE = ( 'beforeExecute' , 'beforeRender' , 'afterExecute' )
 
 '''
 插件基类

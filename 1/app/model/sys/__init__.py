@@ -95,6 +95,7 @@ class plugin(db.base):
         pluginList = {
             'beforeExecute' : {} ,
             'beforeRender' : {} ,
+            'afterExecute' : {} ,
         }
 
         list = self.getList()

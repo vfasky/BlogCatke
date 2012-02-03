@@ -27,6 +27,45 @@ class BlogHandler(core.web.RequestHandler):
             kwargs['plugin_footer'] = []
         return self.write(self.render_string( template_name, **kwargs))
 
+    @app.controller.afterExecute
+    def finish(self, chunk=None):
+        """Finishes this response, ending the HTTP request."""
+        if self._finished:
+            return False
+
+        if chunk is not None: self.write(chunk)
+
+        # Automatically support ETags and add the Content-Length header if
+        # we have not flushed any content yet.
+        if not self._headers_written:
+            if (self._status_code == 200 and
+                self.request.method in ("GET", "HEAD") and
+                "Etag" not in self._headers):
+                etag = self.compute_etag()
+                if etag is not None:
+                    inm = self.request.headers.get("If-None-Match")
+                    if inm and inm.find(etag) != -1:
+                        self._write_buffer = []
+                        self.set_status(304)
+                    else:
+                        self.set_header("Etag", etag)
+            if "Content-Length" not in self._headers:
+                content_length = sum(len(part) for part in self._write_buffer)
+                self.set_header("Content-Length", content_length)
+
+        if hasattr(self.request, "connection"):
+            # Now that the request is finished, clear the callback we
+            # set on the IOStream (which would otherwise prevent the
+            # garbage collection of the RequestHandler when there
+            # are keepalive connections)
+            self.request.connection.stream.set_close_callback(None)
+
+        if not self.application._wsgi:
+            self.flush(include_footers=True)
+            self.request.finish()
+            self._log()
+        self._finished = True
+
 '''
 安装
 '''
@@ -670,6 +709,7 @@ class fatArticle(BlogHandler):
     @app.controller.beforeExecute
     @core.web.acl
     def get(self):
+        #return self.error(msg='s')
         data = {}
         thisTags = []
         if False != self.get_argument('id' , False):

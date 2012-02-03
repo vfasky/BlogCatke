@@ -303,7 +303,9 @@ class RequestHandler(tornado.web.RequestHandler):
     # 显示错误信息
     def error(self,**args):
         args['url'] = args.has_key('url') and args['url'] or self.request.path
-        return self.render("error.html" , **args)
+        self.render("error.html" , **args)
+        self._finished = True
+        return
 
 
         # 取session值

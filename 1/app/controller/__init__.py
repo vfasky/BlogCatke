@@ -9,13 +9,37 @@ import functools
 
 pluginModle = app.model.sys.plugin()
 pluginList = pluginModle.list()
+
+# 执行控制器动作之后调用
+def afterExecute(method):
+    @functools.wraps(method)
+    def wrapper(self, chunk=None):
+        thisAction = self.__class__.__module__ + '.' + self.__class__.__name__
+        if 'afterExecute' not in pluginList or  thisAction not in pluginList['afterExecute'] :
+            return method(self, chunk)
+        else :
+            this = self
+            for plug in pluginList['afterExecute'][ thisAction ] :
+                pluginObj = pluginModle.getInstantiate( plug['name'] )
+                ret = getattr( pluginObj , plug['action'] )( this, chunk )
+
+                this  = ret['this']
+                chunk = ret['chunk']
+
+            return method(this, chunk)
+
+
+    return wrapper
+
 # 执行控制器动作之前调用
 def beforeExecute(method):
     @functools.wraps(method)
     def wrapper(self, *args, **kwargs):
         thisAction = self.__class__.__module__ + '.' + self.__class__.__name__
 
-        if thisAction in pluginList['beforeExecute'] :
+        if thisAction not in pluginList['beforeExecute'] :
+            return method(self, *args, **kwargs)
+        else :
             this = self
             for plug in pluginList['beforeExecute'][ thisAction ] :
                 pluginObj = pluginModle.getInstantiate( plug['name'] )
@@ -25,8 +49,7 @@ def beforeExecute(method):
                 args = ret['args']
                 kwargs = ret['kwargs']
             return method(this, *args, **kwargs)
-        else :
-            return method(self, *args, **kwargs)
+
 
     return wrapper
 
@@ -36,7 +59,9 @@ def beforeRender(method):
     def wrapper(self, template_name, **kwargs):
         thisAction = self.__class__.__module__ + '.' + self.__class__.__name__
 
-        if thisAction in pluginList['beforeRender'] :
+        if thisAction not in pluginList['beforeRender'] :
+            return method(self, template_name, **kwargs)
+        else :
             this = self
             for plug in pluginList['beforeRender'][ thisAction ] :
 
@@ -48,7 +73,6 @@ def beforeRender(method):
                 kwargs = ret['kwargs']
 
             return method(this, template_name, **kwargs)
-        else :
-            return method(self, template_name, **kwargs)
+
 
     return wrapper
