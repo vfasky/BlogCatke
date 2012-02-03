@@ -5,6 +5,7 @@ from core import db
 from core.web import validators
 import app.model.uc
 import tornado.escape
+import pylibmc
 
 
 
@@ -44,6 +45,8 @@ class options(db.base):
     def __delitem__(self, item):
         key = item.strip()
         self.delete('[name] = %s AND [user_id] = 0' , key)
+        if key in self._options:
+            del self._options[key]
 
     def __getitem__(self, item):
         key = item.strip()
@@ -64,15 +67,8 @@ class options(db.base):
 '''
 class plugin(db.base):
 
-    pluginList = {
-        'beforeExecute' : {} ,
-        'beforeRender' : {} ,
-    }
-
-    listIsCache = False
-
     def __init__(self):
-        db.base.__init__(self)
+        self._mc = pylibmc.Client()
         self._option = options()
 
     @classmethod
@@ -82,31 +78,37 @@ class plugin(db.base):
         __import__( pluginName )
         return getattr( sys.modules['app.plugin.' + name] , name )()
 
+    # 取激活的插件列表
     def getList(self):
         if None == self._option['plugin_list']:
             self._option['plugin_list'] = []
         return self._option['plugin_list']
 
-    # 取激活的插件列表
+    # 取激活的插件列表,并格式化成相应的格式
     def list(self):
-        #print plugin.listIsCache
-        if plugin.listIsCache:
-            return plugin.pluginList
+        # 从mc中取
+        pluginList = self._mc.get('QcoreBlog.plugin.list')
 
-        plugin.pluginList = {
+        if pluginList :
+            return tornado.escape.json_decode(pluginList)
+
+        pluginList = {
             'beforeExecute' : {} ,
             'beforeRender' : {} ,
         }
 
         list = self.getList()
+
         for name in list:
             interfaces = self.getInterface(name)
             for cfg in interfaces:
-                if False == plugin.pluginList[ cfg['type'] ].has_key( cfg['target'] ):
-                    plugin.pluginList[ cfg['type'] ][ cfg['target'] ] = []
-                plugin.pluginList[ cfg['type'] ][ cfg['target'] ].append( { 'name' : name , 'action' : cfg['action'] } )
-        plugin.listIsCache = True
-        return plugin.pluginList
+                if False == pluginList[ cfg['type'] ].has_key( cfg['target'] ):
+                    pluginList[ cfg['type'] ][ cfg['target'] ] = []
+                pluginList[ cfg['type'] ][ cfg['target'] ].append( { 'name' : name , 'action' : cfg['action'] } )
+
+        # 写入mc中
+        self._mc.set('QcoreBlog.plugin.list' , tornado.escape.json_encode(pluginList))
+        return pluginList
 
     # 添加插件
     def add(self , name ,**args):
@@ -116,8 +118,9 @@ class plugin(db.base):
             self._option['plugin_list'] = list
             self.setData( name , **args )
             # 清缓存
-            plugin.listIsCache = False
+            self._mc.set('QcoreBlog.plugin.list',False)
             self.list()
+
 
     # 移除插件
     def remove(self,name):
@@ -127,8 +130,9 @@ class plugin(db.base):
             del list[ list.index(name) ]
             self._option['plugin_list'] = list
             # 清缓存
-            plugin.listIsCache = False
+            self._mc.set('QcoreBlog.plugin.list',False)
             self.list()
+
 
     def getData(self,name):
         key = 'plugin:' + name.strip()

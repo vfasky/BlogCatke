@@ -130,33 +130,36 @@ class BlogHandler(core.web.RequestHandler):
 class index(BlogHandler):
     @app.controller.beforeExecute
     def get(self):
-        try:
-            contentModel = app.model.bc.content()
-            page = self.get_argument('page',1)
-            db = contentModel.find().limitPage( page  , 10)\
-                                    .order('[order] DESC , [id] DESC')\
-                                    .fields('[id] , [title], [text] , [created] , [slug] , [type]')
+        contentModel = app.model.bc.content()
+        page = self.get_argument('page',1)
+        db = contentModel.find().limitPage( page  , 10)\
+        .order('[order] DESC , [id] DESC')\
+        .fields('[id] , [title], [text] , [created] , [slug] , [type]')
 
-            find = self.get_argument('q' , False)
-            urlargs = {}
+        find = self.get_argument('q' , False)
+        urlargs = {}
 
-            if False == find:
-                db.where('[type] = %s AND [status] = %s' , 'post', 'publish')
-            else :
-                db.where('[type] = %s AND [status] = %s AND [title] LIKE %s' , 'post', 'publish' ,  '%' + find + '%')
-                urlargs['q'] = find
+        if False == find:
+            db.where('[type] = %s AND [status] = %s' , 'post', 'publish')
+        else :
+            db.where('[type] = %s AND [status] = %s AND [title] LIKE %s' , 'post', 'publish' ,  '%' + find + '%')
+            urlargs['q'] = find
 
-            pagination = db.getPagination()
-            contents = db.query()
+        pagination = db.getPagination()
+        contents = db.query()
 
-            if 0 != len(urlargs):
-                urlargs = '&' + urllib.urlencode(urlargs)
-            else:
-                urlargs = ''
+        # 只显示简单描述
+        list = []
+        for v in contents:
+            v.text = contentModel.getDescription(v.text)
+            list.append(v)
 
-            self.render('index.html', list = contents , pagination = pagination , urlargs = urlargs )
-        except:
-            return self.redirect('/install')
+        if 0 != len(urlargs):
+            urlargs = '&' + urllib.urlencode(urlargs)
+        else:
+            urlargs = ''
+
+        self.render('index.html', list = list , pagination = pagination , urlargs = urlargs )
 
 '''
 feed
@@ -208,7 +211,13 @@ class category(BlogHandler):
 
             pagination = db.getPagination()
             contents = db.query()
-            self.render('category.html', list = contents , pagination = pagination , urlargs = '' )
+
+            # 只显示简单描述
+            list = []
+            for v in contents:
+                v.text = app.model.bc.content.getDescription(v.text)
+                list.append(v)
+            self.render('category.html', list = list , pagination = pagination , urlargs = '' )
         else:
             self.render('404.html')
 
@@ -233,7 +242,14 @@ class tag(BlogHandler):
 
             pagination = db.getPagination()
             contents = db.query()
-            self.render('tag.html', list = contents , pagination = pagination , urlargs = '' )
+
+            # 只显示简单描述
+            list = []
+            for v in contents:
+                v.text = app.model.bc.content.getDescription(v.text)
+                list.append(v)
+
+            self.render('tag.html', list = list , pagination = pagination , urlargs = '' )
         else:
             self.render('404.html')
 

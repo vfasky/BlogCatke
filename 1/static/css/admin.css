@@ -132,3 +132,13 @@ body div.token-input-dropdown-mac{
     list-style: none;
 
 }
+.login-form{
+    border-radius: 4px 4px 4px 4px !important;
+    border-style: solid !important;
+    border-width: 2px !important;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.33) !important;
+    padding-top: 22px
+}
+.login-form .actions{
+    background: none;
+}

@@ -8,13 +8,12 @@ import app.model.sys
 import functools
 
 pluginModle = app.model.sys.plugin()
-
+pluginList = pluginModle.list()
 # 执行控制器动作之前调用
 def beforeExecute(method):
     @functools.wraps(method)
     def wrapper(self, *args, **kwargs):
         thisAction = self.__class__.__module__ + '.' + self.__class__.__name__
-        pluginList = pluginModle.list()
 
         if thisAction in pluginList['beforeExecute'] :
             this = self
@@ -36,7 +35,6 @@ def beforeRender(method):
     @functools.wraps(method)
     def wrapper(self, template_name, **kwargs):
         thisAction = self.__class__.__module__ + '.' + self.__class__.__name__
-        pluginList = pluginModle.list()
 
         if thisAction in pluginList['beforeRender'] :
             this = self

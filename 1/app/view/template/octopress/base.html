@@ -17,7 +17,8 @@
 
   <link href="{{ static_url('template/octopress/css/screen.css') }}" media="screen, projection" rel="stylesheet" type="text/css" />
 
-  <script src="http://lib.sinaapp.com/js/jquery/1.7/jquery.min.js"></script>
+
+  <script type="text/javascript" src="{{ static_url('js/jquery-1.7.1.min.js') }}"></script>
   <script src="{{ static_url('template/octopress/js/main.js') }}"></script>
     {% for header in plugin_header %}
     {{header}}
@@ -89,11 +90,15 @@
   </div>
   <footer>
 	<p>
+      <a style="float: right;" target="_blank" href="http://sae.sina.com.cn"><img title="Powered by Sina App Engine" src="http://static.sae.sina.com.cn/image/poweredby/117X12px.gif"></a>
 	  Copyright &copy; 2012
 	  <span class="credit">Powered by <a href="http://qcoreblog.sinaapp.com/">Qcore Blog</a></span> -
 	  <span class="credit">Theme by <a href="http://www.octopress.org/">Octopress</a></span>
         Time : {{ handler.request_time() }} sec
-        <a target="_blank" href="http://sae.sina.com.cn"><img title="Powered by Sina App Engine" src="http://static.sae.sina.com.cn/image/poweredby/117X12px.gif"></a>
+      /
+      <span class="credit"> <a href="/login" rel="nofollow">管理登陆</a></span>
+
+
 	</p>
   </footer>
   {% for footer in plugin_footer %}

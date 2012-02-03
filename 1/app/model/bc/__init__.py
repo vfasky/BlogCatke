@@ -68,6 +68,13 @@ class content(db.base):
         db.base.__init__(self)
         self.db_name = 'bc_content'
 
+    # 只显示简单描述
+    @classmethod
+    def getDescription(cls,text):
+        text = str(text)
+        list = text.split('<!--more-->')
+        return list[0]
+
     # 删除文章
     @classmethod
     def remove(cls,contentId):
