@@ -20,6 +20,7 @@ import uimodules
 settings = {
     'debug': True,
     'gzip': True,
+    'Version' : '1.0.3.1',
     'cookie_secret' : '"61o42QsKXQAGaYdvfasky5aDfpsu$^EQnp2XdTP1o/Vo=', #请修改随机值
     'root_path' : os.path.dirname(__file__),
     'template_path' : os.path.join(os.path.dirname(__file__), "app/view/"),
