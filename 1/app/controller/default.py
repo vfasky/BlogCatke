@@ -169,26 +169,21 @@ class feed(BlogHandler):
     def get(self):
         self.set_header('Content-Type','application/xml')
         mc = pylibmc.Client()
-        feed = mc.get('QcoreBlogFeedXML')
+        feedList = mc.get('QcoreBlogFeedList')
 
-        if feed :
-            return self.write( feed )
+        if not feedList :
+            contentModel = app.model.bc.content()
+            feedList = contentModel.find('[type] = %s AND [status] = %s' , 'post' , 'publish')\
+                                   .fields('[id],[title],[slug],[text],[created],[user_id]')\
+                                   .order('[order] DESC , [id] DESC')\
+                                   .limit(0 , 10)\
+                                   .query()
+            mc.set('QcoreBlogFeedList' , feedList , 3600)
 
-        contentModel = app.model.bc.content()
-        list = contentModel.find('[type] = %s AND [status] = %s' , 'post' , 'publish')\
-                           .fields('[id],[title],[slug],[text],[created],[user_id]')\
-                           .order('[order] DESC , [id] DESC')\
-                           .limit(0 , 10)\
-                           .query()
+        self.render('../../feed.xml' , host = self.request.host ,
+                                         time = time.time() ,
+                                         list = feedList )
 
-        feed = self.render_string('feed.xml' ,
-                                  host = self.request.host ,
-                                  options = self._options ,
-                                  Q = templatePlug(self, '/', options = self._options ),
-                                  time = time.time() ,
-                                  list = list )
-        mc.set('QcoreBlogFeedXML' , feed , 3600)
-        return self.write( feed )
 
 '''
 分类
