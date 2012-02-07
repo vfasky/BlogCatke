@@ -714,6 +714,7 @@ class fatArticle(BlogHandler):
         thisTags = []
         if False != self.get_argument('id' , False):
             data = app.model.bc.content().find('[id] = %s' , int( self.get_argument('id') )).query()
+            data['category_id'] = app.model.bc.content.category( data['id'] )['id']
             thisTags = app.model.bc.content.tags( self.get_argument('id') )
 
         tags = app.model.bc.meta().find('[type] = %s' , 'tag').fields('[name]').getAll()
