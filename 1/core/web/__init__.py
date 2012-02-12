@@ -379,9 +379,9 @@ def acl(method):
             db = self.db().table( config['db_name'] )
             rule = db.find('[uri] = %s' , uri).query()
             if rule :
-                mc.set('ACL_URI_' + uri , tornado.escape.json_encode( rule ))
+                mc.set('ACL_URI_' + uri , rule )
         else:
-            rule = tornado.escape.json_decode( ruleCache )
+            rule = ruleCache
 
         from core.web import validators
 

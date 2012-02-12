@@ -43,9 +43,11 @@
 var jiathis_config={
 	summary:"",
 	hideMore:false
-}
+};
+jQuery(window).bind('load.jiathis' , function(){
+    jQuery.getScript('http://v2.jiathis.com/code_mini/jia.js');
+})
 </script>
-<script type="text/javascript" src="http://v2.jiathis.com/code_mini/jia.js" charset="utf-8"></script>
 <!-- JiaThis Button END -->
             </p>
         </footer>
@@ -55,11 +57,11 @@ var jiathis_config={
         <h1>Comments</h1>
 
         <div id="disqus_thread">
-            <div id="disqus_thread"></div>
-            <script type="text/javascript">
 
+            <script type="text/javascript">
+                var disqus_shortname = '{{siteComment['disqus_shortname']}}';
                 (function() {
-                    var disqus_shortname = '{{siteComment['disqus_shortname']}}';
+
                     var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
                     dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
                     (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
