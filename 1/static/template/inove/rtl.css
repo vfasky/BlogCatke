@@ -1,0 +1,315 @@
+body {
+	text-align:right;
+	direction:rtl;
+}
+blockquote, pre {
+	background:#F4F5F7 url(imgrtl/blockquote.gif) 100% 3px no-repeat;
+	padding:8px 36px 8px 12px;
+}
+
+/* header START */
+#tagline {
+	float:right;
+}
+#header .banner {
+	float:left;
+}
+#menus li a {
+	background:transparent url(imgrtl/menu.gif) 100% 0 no-repeat;
+	float:right;
+	margin-right:-10px;
+	padding:0 20px 0 30px;
+}
+#menus li a:hover, 
+#menus li a.current {
+	background-position:100% -31px;
+}
+#menus li.current_page_item a, 
+#menus li.current-cat a {
+	background-position:100% -62px;
+}
+#menus li a.home {
+	background-position:100% -93px;
+	margin-right:0;
+	padding:0;
+}
+#menus li a.home:hover {
+	background-position:100% -124px;
+}
+#menus li.current_page_item a.home {
+	background-position:100% -155px;
+}
+#menus li a.lastmenu:hover {
+	background-position:100% 0;
+}
+#menus li li a {
+	padding-right:10px;
+	padding-left:18px;
+}
+#menus li li a.subtitle, 
+#menus li li a.subtitle:hover {
+	background-image:url(imgrtl/arrow.gif);
+	background-position:left;
+}
+#searchbox {
+	background: url(imgrtl/searchbox.gif) no-repeat;
+	float:left;
+	margin-right:0;
+	margin-left:10px !important;
+	margin-left:5px;
+}
+#searchbox .textfield {
+	float:right;
+}
+/* header END */
+
+/* content START */
+#content {
+	background:#FFF url(imgrtl/sidesep.gif) left repeat-y;
+}
+/* content END */
+
+/* main START */
+#main {
+	float:right;
+}
+.post .date, 
+.post .author, 
+.post .editpost, 
+.post .readingblinds, 
+.post .comments, 
+.post .addcomment, 
+.post .addlink, 
+.post .editlinks {
+	background-position:100% 0;
+	padding-left:0;
+	padding-right:22px;
+}
+.post .tags, 
+.post .categories {
+	background:url(img/icons.gif) no-repeat;
+	padding-left:0;
+}
+.post .content .under span.tags, 
+.post .content .under span.categories {
+	margin-left:6px;
+}
+.post .act {
+	float:left;
+}
+.post .act span {
+	float:right;
+	margin-left:0;
+	margin-right:15px;
+}
+.post .tags {
+	background-position:100% -400px;
+}
+.post .categories {
+	background-position:100% -480px;
+}
+.post .author {
+	background-position:100% 0px;
+}
+.post .date {
+	background-position:100% -48px;
+	margin-right:0;
+	margin-left:15px;
+	float:right;
+}
+.post .author {
+	float:right;
+}
+.post .editpost {
+	background-position:100% -64px;
+	margin-left:0;
+	margin-right:15px;
+	float:left;
+}
+.post .comments {
+	background-position:100% -96px;
+	float:left;
+}
+.post .addcomment {
+	background-position:100% -112px;
+	margin-left:0;
+	margin-right:15px;
+	float:left;
+}
+.post .addlink {
+	background-position:100% -176px;
+}
+.post .editlinks {
+	background-position:100% -192px;
+}
+.post .content .under {
+	padding-left:0;
+	padding-right:5px;
+}
+.post .content .under span {
+	float:right;
+	margin-left:15px;
+	margin-right:0;
+}
+#postpath {
+	background:url(imgrtl/path.gif) right no-repeat;
+	padding-left:0;
+	padding-right:22px;
+}
+#pagenavi .newer a, 
+#postnavi .prev a {
+	background-position:100% -240px;
+	padding-left:0;
+	padding-right:22px;
+	float:right;
+}
+#pagenavi .older a, 
+#postnavi .next a {
+	background-position:0 -224px;
+	padding-left:22px;
+	padding-right:0;
+	float:left;
+}
+/* main END */
+
+/* sidebar START */
+#sidebar {
+	float:left;
+}
+#sidebar li {
+	background-position:100% -560px;
+	padding-left:0;
+	padding-right:22px;
+	margin-top:5px;
+	/*font-size:95%;*/
+}
+#sidebar #feedrss, 
+#sidebar #feedemail, 
+#sidebar #followme {
+	padding:5px 31px 5px 5px;
+	float:right;
+}
+#sidebar #feedrss {
+	background: url(img/feeds.gif) 100% 5px no-repeat;
+	margin-right:5px;
+}
+#sidebar #feedemail {
+	background: url(img/feeds.gif) 100% -45px no-repeat;
+	margin-left:0;
+	margin-right:15px;
+}
+#sidebar #followme {
+	background: url(img/feeds.gif) 100% -95px no-repeat;
+	margin-left:0;
+	margin-right:15px;
+}
+#subscribe li {
+	float:right;
+	margin:0;
+	padding:0;
+}
+/* sidebar END */
+
+/* footer START */
+a#powered {
+	float:right;
+	margin:0 5px 0 10px;
+}
+a#gotop {
+	background-position:100% -304px;
+	float:left;
+	padding-left:0;
+	padding-right:16px;
+	margin:5px 0 0 15px !important;
+	margin:5px 0 0 8px;
+}
+/* footer END */
+
+/* comment START */
+#cmtswitcher a.tab, 
+#cmtswitcher a.curtab {
+	float:left;
+}
+#cmtswitcher .addcomment, 
+#cmtswitcher .addtrackback {
+	padding-left:0;
+	padding-right:22px;
+	float:right;
+	margin-left:15px;
+	margin-right:0;
+}
+#cmtswitcher .addcomment {
+	background-position:100% -112px;
+}
+#cmtswitcher .addtrackback {
+	background-position:100% -144px;
+}
+.comment .author {
+	float:right;
+}
+.comment .pic {
+	background:url(img/commentpoint.png) 0% 33% no-repeat;
+	padding-right:0;
+	padding-left:14px;
+}
+.comment .name {
+	padding-right:0;
+	padding-left:14px;
+}
+.admincomment .author {
+	float:left;
+	width:81px;
+	text-align:center;
+}
+.admincomment .pic {
+	background:url(img/commentpoint.png) 100% 33% no-repeat;
+	padding-right:14px;
+	padding-left:0;
+	margin-top:10px;
+}
+.admincomment .name {
+	width:67px;
+	padding-right:14px;
+	font-weight:bolder;
+	overflow:hidden;
+}
+.admincomment .info {
+	float:left;
+}
+#emoticon {
+	float:left;
+	margin-left:10px;
+	margin-right:0;
+}
+#commentnavi span.pages {
+	background-position:100% -272px;
+	padding:0 22px 0 7px;
+	float:right;
+}
+#submitbox a.feed {
+	background-position:100% -256px;
+	padding-left:0;
+	padding-right:22px;
+	float:right;
+}
+#submitbox .submitbutton {
+	float:left;
+}
+/* comment END */
+
+/* linkcat START */
+.post .content .linkcat ul li {
+	float:right;
+}
+.post .content .linkcat ul li a {
+	background-position:100% -160px;
+	padding:0;
+	padding-right:22px;
+}
+/* linkcat END */
+
+/* image switcher START */
+a.imageswitcher_button {
+	float:right;
+}
+/* image switcher END */

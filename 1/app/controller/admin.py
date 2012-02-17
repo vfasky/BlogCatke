@@ -996,8 +996,8 @@ class acl(BlogHandler):
             data = model.find('[id] = %s' , form.values['id']).query()
 
             # 清空缓存
-            if data and mc.get('ACL_URI_' + str(data['uri'])):
-                mc.delete('ACL_URI_' + str(data['uri']))
+            if data and mc.get('_ACL_URI_' + str(data['uri'])):
+                mc.delete('_ACL_URI_' + str(data['uri']))
 
             # 添加
             if not form.values['id']:

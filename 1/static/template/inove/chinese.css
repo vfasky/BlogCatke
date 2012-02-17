@@ -1,0 +1,44 @@
+small, 
+#tagline, 
+#cmtswitcher, 
+.comment .date, 
+.trackback .date, 
+.comment .act, 
+.trackback .act, 
+#submit, 
+.more-link, 
+.messagebox, 
+.errorbox, 
+#menus li a, 
+.post .date, 
+.post .under, 
+.post .author, 
+.post .editpost, 
+.post .readingblinds, 
+.post .comments, 
+.post .addcomment, 
+.post .editlinks, 
+.post .addlink, 
+#pagenavi, 
+#footer, 
+#cmtswitcher .addcomment, 
+#cmtswitcher .addtrackback, 
+#respond, 
+#commentnavi, 
+#submitbox #submit,
+#sidebar #feedrss, 
+#sidebar #feedemail, 
+#sidebar #followme {
+	font-size:12px;
+}
+#caption {
+	padding:25px 30px 21px !important;
+	padding:25px 30px 20px;
+}
+#cmtswitcher #trackbacktab {
+	padding:5px 10px !important;
+	padding:6px 10px;
+}
+*+html #cmtswitcher #trackbacktab {
+	padding:6px 10px !important;
+}

@@ -1,0 +1,68 @@
+#sidebar .rc_item, 
+#sidebar #rc_nav {
+	background:transparent;
+	line-height:145%;
+	padding:2px 0;
+}
+#sidebar #rc_nav {
+	height:16px;
+}
+.rc_item .rc_avatar {
+	line-height:1px;
+}
+.rc_item .rc_avatar img {
+	background:#FFF;
+	padding:1px;
+	border:1px solid #999;
+}
+.rc_item .rc_left {
+	display:inline;
+	float:left;
+	padding-right:7px !important;
+	padding-right:4px;
+}
+.rc_item .rc_right {
+	display:inline;
+	float:right;
+	padding-left:7px !important;
+	padding-left:4px;
+}
+.rc_item .rc_info .author_name {
+	font-weight:bold;
+}
+#sidebar #rc_nav {
+	padding-top:5px;
+}
+#rc_newest {
+	float:left;
+	padding-right:10px;
+}
+#rc_newer {
+	float:left;
+}
+#rc_older {
+	float:right;
+}
+.rc_fixed {
+	clear:both;
+}
+.rc_expand {
+	font-size:10px;
+}
+.rc_label {
+	font-weight:bolder;
+	font-size:10px;
+}
+.rc_back {
+	float:left;
+}
+.rc_datetime {
+	float:right;
+}
+.rc_ajax_loader {
+	background:url(img/ajax-loader.gif) left no-repeat;
+	padding-left:22px;
+	height:16px;
+	line-height:16px;
+	display:block;
+}

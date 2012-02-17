@@ -373,15 +373,15 @@ def acl(method):
 
         import pylibmc
         mc = pylibmc.Client()
-        ruleCache = mc.get('ACL_URI_' + uri)
+        ruleCache = mc.get('_ACL_URI_' + uri)
         if not ruleCache:
             # 初始化db
             db = self.db().table( config['db_name'] )
             rule = db.find('[uri] = %s' , uri).query()
             if rule :
-                mc.set('ACL_URI_' + uri , tornado.escape.json_encode( rule ))
+                mc.set('_ACL_URI_' + uri , tornado.escape.json_encode(rule) )
         else:
-            rule = tornado.escape.json_decode( ruleCache )
+            rule = tornado.escape.json_decode(ruleCache)
 
         from core.web import validators
 

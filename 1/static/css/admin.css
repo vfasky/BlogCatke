@@ -26,7 +26,7 @@ body{
     background-attachment: scroll;
     background-clip: border-box;
     background-color: #A2A3AB;
-    background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAYAAAABCAMAAADKFy/CAAAABlBMVEX///////9VfPVsAAAAAnRSTlP/AOW3MEoAAAANSURBVAjXY2BgYAQCAAARAAVwgCxyAAAAAElFTkSuQmCC"), url("/img/drops/standard/noise.png"), -moz-linear-gradient(#A7AAB0, #9B9CA4);
+    background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAYAAAABCAMAAADKFy/CAAAABlBMVEX///////9VfPVsAAAAAnRSTlP/AOW3MEoAAAANSURBVAjXY2BgYAQCAAARAAVwgCxyAAAAAElFTkSuQmCC"),  -moz-linear-gradient(#A7AAB0, #9B9CA4);
     background-origin: padding-box;
     background-position: center top, 0 0;
     background-repeat: repeat-x, repeat;
@@ -66,11 +66,12 @@ body{
 #article-wrap .article-preview{
     border: 2px dashed #AAACAE;
     padding: 12px;
-    margin: 5px 0 0 10px;
+    margin: 5px 0 0 0;
 }
-.article-preview ul, .article-preview ol{
-    margin-left: 18px;
+#article-wrap .article-preview img{
+    max-width: 610px;
 }
+
 .config-forms{
     padding-top: 20px;
 }

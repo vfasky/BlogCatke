@@ -1,0 +1,61 @@
+.wp_syntax {
+	margin-bottom:10px;
+	overflow:auto;
+	overflow-x:auto;
+	overflow-y:hidden;
+	width:100% !important;
+	width:99%;
+	background:#F7F7F7;
+	padding-bottom:0 !important;
+	padding-bottom:15px;
+	border:1px solid #CCC;
+}
+.comment .content .wp_syntax {
+	margin-top:10px;
+}
+*+html .wp_syntax {
+	padding-bottom:15px !important;
+}
+.wp_syntax div, .wp_syntax td {
+	vertical-align:top;
+	padding:2px 4px;
+}
+.wp_syntax .code {
+	color:#333;
+}
+.wp_syntax pre {
+	border:none;
+	background:none;
+	margin:0;
+	padding:0;
+	width:auto;
+	float:none;
+	clear:none;
+	overflow:visible;
+	font-size:12px;
+	line-height:1.333;
+}
+.line_numbers pre {
+	padding-left:10px;
+}
+.wp_syntax table, 
+.post .content .wp_syntax table {
+	border-collapse:collapse;
+	background:#F7F7F7;
+	border:none;
+	margin:0;
+}
+.wp_syntax td, 
+.post .content .wp_syntax td {
+	border-top:none;
+	padding:2px 4px;
+	border:none;
+}
+.wp_syntax .line_numbers, 
+.post .content .wp_syntax .line_numbers {
+	text-align:right;
+	color:#666;
+	overflow:visible;
+	background:#E3E4E6;
+	border-right:1px solid #CCC;
+}

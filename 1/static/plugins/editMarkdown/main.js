@@ -61,7 +61,7 @@ jQuery(function(){
         previewBox.html(html)
     });
 
-    previewBox.appendTo( form.dom().find('.markItUpFooter') );
+    previewBox.appendTo( form.dom().find('.span11') );
 
 
 })

@@ -20,6 +20,7 @@ import uimodules
 settings = {
     'debug': True,
     'gzip': True,
+    'Version' : '1.0.3.2',
     'cookie_secret' : '"61o42QsKXQAGaYdvfasky5aDfpsu$^EQnp2XdTP1o/Vo=', #请修改随机值
     'root_path' : os.path.dirname(__file__),
     'template_path' : os.path.join(os.path.dirname(__file__), "app/view/"),
@@ -64,6 +65,7 @@ app = tornado.wsgi.WSGIApplication([
     (r"/admin/upload", app.controller.admin.upload),
     (r"/admin/comment", app.controller.admin.comment),
     (r"/admin/plugin", app.controller.admin.plugin),
+    (r"/(.+)$", app.controller.default._404),
 ], **settings)
 
 application = sae.create_wsgi_app(app)

@@ -11,10 +11,11 @@
         <p class="meta">
       	<time datetime="{{ Q.date('%Y-%m-%d %H:%M' , post.created ) }}" pubdate>{{ Q.date('%Y-%m-%d %H:%M' , post.created ) }}</time>
         </p>
+        <p class="comment-count"><a href="http://{{ handler.request.host }}/{{ post.type }}/{{ url_escape( post.slug ) }}#disqus_thread" rel="full-article"></a></p>
     </header>
     <div class="entry-content">{{ post.text }}</div>
     <footer>
-      <a rel="full-article" href="/{{ post.type }}/{{ url_escape( post.slug ) }}">Read On</a>
+      <a rel="full-article" href="/{{ post.type }}/{{ url_escape( post.slug ) }}" >Read On</a>
     </footer>
 </article>
 {% end %}
@@ -34,5 +35,18 @@
         </div>
     </nav>
 </div>
+
+    {% if options['site_comment'] %}
+    <script>
+        var disqus_shortname = '{{options['site_comment']['disqus_shortname']}}';
+        (function () {
+
+            var s = document.createElement('script'); s.async = true;
+            s.type = 'text/javascript';
+            s.src = 'http://' + disqus_shortname + '.disqus.com/count.js';
+            (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
+        }());
+    </script>
+    {% end %}
 {% end %}
 

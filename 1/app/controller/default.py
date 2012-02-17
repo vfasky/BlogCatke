@@ -162,6 +162,18 @@ class index(BlogHandler):
         self.render('index.html', list = list , pagination = pagination , urlargs = urlargs )
 
 '''
+404
+'''
+class _404(BlogHandler):
+    @app.controller.beforeExecute
+    def get(self , url):
+        self.render('404.html')
+    @app.controller.beforeExecute
+    def post(self, url):
+        return self.get(url)
+
+
+'''
 feed
 '''
 class feed(BlogHandler):

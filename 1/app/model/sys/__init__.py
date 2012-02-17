@@ -86,11 +86,14 @@ class plugin(db.base):
 
     # 取激活的插件列表,并格式化成相应的格式
     def list(self):
+
+
         # 从mc中取
-        pluginList = self._mc.get('QcoreBlog.plugin.list')
+        pluginList = self._mc.get('_QcoreBlog.plugin.list')
 
         if pluginList :
-            return tornado.escape.json_decode(pluginList)
+            plugin._list = pluginList
+            return pluginList
 
         pluginList = {
             'beforeExecute' : {} ,
@@ -108,7 +111,8 @@ class plugin(db.base):
                 pluginList[ cfg['type'] ][ cfg['target'] ].append( { 'name' : name , 'action' : cfg['action'] } )
 
         # 写入mc中
-        self._mc.set('QcoreBlog.plugin.list' , tornado.escape.json_encode(pluginList))
+        self._mc.set('_QcoreBlog.plugin.list' , pluginList)
+
         return pluginList
 
     # 添加插件
@@ -119,7 +123,7 @@ class plugin(db.base):
             self._option['plugin_list'] = list
             self.setData( name , **args )
             # 清缓存
-            self._mc.set('QcoreBlog.plugin.list',False)
+            self._mc.set('_QcoreBlog.plugin.list',False)
             self.list()
 
 
@@ -131,7 +135,7 @@ class plugin(db.base):
             del list[ list.index(name) ]
             self._option['plugin_list'] = list
             # 清缓存
-            self._mc.set('QcoreBlog.plugin.list',False)
+            self._mc.set('_QcoreBlog.plugin.list',False)
             self.list()
 
 

@@ -1,0 +1,79 @@
+* {
+	margin:0;
+	padding:0;
+}
+body {
+	font-family:Verdana,"BitStream vera Sans",Arial,Helvetica,'Lucida Grande','Lucida Sans Unicode',Sans-serif;
+	color:#555;
+}
+img {
+	border:0;
+}
+a {
+	color:#2970A6;
+	text-decoration:none;
+}
+a:hover {
+	text-decoration:underline;
+}
+.fixed {
+	clear:both;
+}
+#container {
+	margin:100px auto;
+	width:750px;
+}
+#talker {
+	background:url(img/commentpoint.png) 100% 33% no-repeat;
+	padding-right:45px;
+	float:left;
+}
+#talker a {
+	float:left;
+	margin-top:20px;
+}
+#notice {
+	background:#EDEFF0 url(img/postbox.gif) 0 0 no-repeat;
+	width:560px;
+	float:left;
+	padding:15px 20px 0;
+}
+#notice h1 {
+	font-size:24px;
+	font-family:"Courier New", Courier, Monospace;
+}
+#notice p {
+	font-size:14px;
+	margin-top:10px;
+}
+#notice .back {
+	background:url(img/postbox.gif) 100% 100% no-repeat;
+	width:560px;
+	display:block;
+	margin:0 -20px;
+	padding:30px 20px;
+}
+#notice .back a {
+	color:#000;
+	font-weight:bolder;
+	text-decoration:none;
+	background:#9CD941;
+	border:1px solid #D0F29D;
+	border-right-color:#398A38;
+	border-bottom-color:#398A38;
+	padding:10px 15px;
+	font-size:14px;
+	margin-right:3px;
+}
+#notice .back a:hover {
+	background:#ADEB51;
+}
+#notice .back a.feed {
+	background:#F9A350;
+	border:1px solid #FAAC56;
+	border-right-color:#C6432A;
+	border-bottom-color:#C6432A;
+}
+#notice .back a.feed:hover {
+	background:#FCB363;
+}
