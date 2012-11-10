@@ -1,0 +1,198 @@
+@Bcolor : #205081;
+
+header{
+    background: @Bcolor;
+    border-bottom: 3px solid #2E3D54;
+    color: #FFFFFF;
+    padding: 0 10px;
+    height: 40px;
+    line-height: 40px;
+
+    h1{
+        margin:0;
+        font-size:20px;
+        padding-left: 20px;
+    }
+}
+
+footer{
+    clear: both;
+    height: 99px;
+    margin-top: 40px;
+    background: #F5F5F5;
+    border-top: 1px solid #DDDDDD;
+
+    .info{
+        padding: 20px;
+    }
+}
+.form-wrap{
+    border: 1px solid #ddd;
+    border-radius: 6px 6px 0 0 ;
+    form{
+        margin-bottom: 0;
+        padding-top: 20px;
+        .control-group{
+            padding-left: 20px;
+        }
+        
+    }
+
+    .form-actions{
+        margin-bottom: 0;
+    }
+}
+.admin-main{
+    padding-top:25px;
+    background: url(img/bg.jpg) repeat-x;
+}
+
+#select-goods{
+    position: relative;
+
+    .thumbnails {
+        padding-top: 20px;
+        display: none;
+        clear: both;
+    }
+
+    .commission-box{
+        display: none;
+        position: absolute;
+        top: 40px; 
+    }
+
+    .search-form, .btn-group , button{
+        display: inline;
+        margin-right: 4px;
+      
+    }
+
+    .items-btn , .commission-btn{
+        float: left;
+    }
+}
+
+.item-info{
+    
+    .comments{
+        float: right;
+        width: 200px;
+
+        .comment-box{
+            padding: 8px 0;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .user{
+            color: #999;
+            margin-bottom: 2px;
+        }
+
+        .comment{
+            padding-left: 6px;
+            font-size: 13px;
+        }
+        
+        img{
+            float: left;
+            width : 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 2px #333;
+            margin-right: 5px;
+        }
+    }
+
+    .avatar{
+        max-width: 50px;
+        max-height: 50px;
+        float: left;
+        box-shadow: 0 0 3px #222;
+        margin: 0px 12px 5px 0px;
+        border-radius: 25px;
+    }
+
+    .html{
+        width: 740px;
+        overflow: hidden;
+
+        img{
+            max-width: 720px;
+        }
+    }
+}
+
+.pagination-wrap{
+    clear: both;
+
+    padding: 6px;
+}
+
+#goods-list{
+    padding-top: 12px;
+    .box{
+
+        float: left;
+        padding: 6px;
+        border: 1px solid #ddd;
+        margin: 12px;
+        width: 200px;
+        height: 300px;
+        overflow: hidden;
+        position: relative;
+        box-shadow: 0 0 6px #999;
+
+        .load{
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            line-height: 300px;
+            z-index: 10;
+            background: rgba(0,0,0,.5);
+            text-align: center;
+            color: #fff;
+            font-size: 20px;
+        }
+
+        img{
+            position: relative;
+            z-index: 1;
+            max-width: 200px;
+            max-height: 200px;
+            cursor: pointer;
+        }
+
+        strong{
+            display: block;
+            height: 40px;
+            overflow: hidden;
+        }
+
+        hr{
+            margin: 5px; 
+        }
+        .badge{
+            float: right;
+            margin-top: 4px;
+        }
+
+        .price{
+            float: left;
+            position: relative;
+            z-index: 2;
+            margin-top: -48px;
+            font-weight: bold;
+            font-size: 25px;
+            color: #ff6600;
+            width: 200px;
+            text-shadow: 1px 0 0 #333;
+            box-shadow: 0 0 3px #333;
+            background: rgba(0,0,0,.5);
+            display: block;
+            padding: 6px 0;
+            text-align: center;
+        }
+    }
+}

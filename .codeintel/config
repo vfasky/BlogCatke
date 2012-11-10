@@ -1,0 +1,10 @@
+{
+    "Python": {
+        "python": '~/github/local/BlogCatke/ENV/bin/python',
+        "pythonExtraPaths": [
+            '~/github/local/BlogCatke/ENV/lib/python2.7/site-packages',
+            '~/github/local/BlogCatke/',
+            '~/github/local/BlogCatke/modules'
+        ]
+    }
+}
